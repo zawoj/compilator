@@ -1,11 +1,11 @@
 %option noyywrap
 %{
-  #include <string>
-  #include <iostream>
+#include <string>
+#include <iostream>
 
-  // Here will go other includes connected to Codegenerator and other parts of compiler
+// Here will go other includes connected to Codegenerator and other parts of compiler
 
-  init yylex(); 
+int yylex();
 %}
 
 %s COMMENT
@@ -63,11 +63,11 @@
 
     .               {return INVALIDCHAR;}
   }
-
-  <COMMENT>{
-    [^\]]     ;
-    "]"       {BEGIN(INITIAL);}
-    <<EOF>>   {return INFCOMMENT;}
-  }
+  
+<COMMENT>{
+  [^\]]               ;
+  "]"                 { BEGIN(INITIAL); }
+  <<EOF>>             { return INFCOMMENT; }
+}
 
 %%

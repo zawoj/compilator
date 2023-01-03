@@ -20,7 +20,7 @@
    std::string* str;
 }
 
-%token <intval> num;
+%token <intval> NUM;
 
 %token PROCEDURE  "PROCEDURE"
 %token PROGRAM    "PROGRAM"
@@ -100,7 +100,7 @@ condition :
 ;
 
 value : 
-   num { std::cout << "value num" << std::endl; }
+   NUM { std::cout << "value num" << std::endl; }
 |  identifier { std::cout << "value identifier" << std::endl; }
 ;
 

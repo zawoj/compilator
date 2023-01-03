@@ -1,0 +1,151 @@
+%{
+#include <string>
+
+#include "src/Parameters.h"
+#include "src/CodeGenerator.h"
+#include "src/Memory.h"
+#include "src/variable/Variable.h"
+
+extern FILE *yyin;
+CodeGenerator* codeGenerator;
+Memory* memory;
+
+int yylex(void);
+void yyerror(std::string error);
+%}
+
+%union {
+    uint64_t num;
+    std::string* str;
+    Variable* var;
+    Condition cond;
+    IfElseParam ifElse;
+    ForParam forParam;
+}
+
+%start program
+
+%token DECLARE _BEGIN END
+%token READ WRITE
+%token <ifElse> IF
+%token THEN ELSE ENDIF
+%token WHILE DO ENDWHILE
+%token <num> REPEAT
+%token UNTIL
+%token <forParam> FOR
+%token FROM TO DOWNTO ENDFOR
+
+%left PLUS MINUS MULTIPLY DIVIDE MODULO
+
+%token ASSIGN
+%token EQ NE LT GT LE GE
+
+%token LBRACKET RBRACKET SEMICOLON COLON COMMA
+
+%token <num> NUM
+%token <str> PIDENTIFIER
+
+%token INVALIDCHAR INFCOMMENT
+
+%type <var> identifier value
+%type <str> expression
+%type <cond> condition
+
+%%
+
+program:
+    DECLARE declarations _BEGIN commands END        { codeGenerator->endGenerateCode(); }
+|   _BEGIN commands END                             { codeGenerator->endGenerateCode(); }
+;
+
+declarations:
+    declarations COMMA declaration
+|   declarations COMMA arrayDeclaration
+|   declaration
+|   arrayDeclaration
+;
+
+declaration:
+    PIDENTIFIER                                      { memory->setVariable(*$1); }
+;
+
+arrayDeclaration:
+    PIDENTIFIER LBRACKET NUM COLON NUM RBRACKET      { memory->setArray(*$1, $3, $5); }
+;
+
+commands:
+    commands command
+|   command
+;
+
+command:
+    identifier ASSIGN expression SEMICOLON          { codeGenerator->assignValue($1, *$3); }
+|   IF condition THEN commands                      { $1 = codeGenerator->flowControl()->ifElseFirst($2); }
+    ELSE commands ENDIF                             { codeGenerator->flowControl()->ifElseSecond($1); }
+|   IF condition THEN commands ENDIF                { codeGenerator->flowControl()->singleIf($2); }
+|   WHILE condition DO commands ENDWHILE            { codeGenerator->flowControl()->whileLoop($2); }
+|   REPEAT                                          { $1 = codeGenerator->flowControl()->repeatUntilFirst(); }
+    commands UNTIL condition SEMICOLON              { codeGenerator->flowControl()->repeatUntilSecond($5, $1); }
+|   FOR PIDENTIFIER FROM value TO value             { $1 = codeGenerator->flowControl()->forLoopToFirst(*$2, $4, $6); }
+    DO commands ENDFOR                              { codeGenerator->flowControl()->forLoopToSecond($1); }
+|   FOR PIDENTIFIER FROM value DOWNTO value         { $1 = codeGenerator->flowControl()->forLoopDownToFirst(*$2, $4, $6); }
+    DO commands ENDFOR                              { codeGenerator->flowControl()->forLoopDownToSecond($1); }
+|   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
+|   WRITE value SEMICOLON                           { codeGenerator->writeVariable($2); }
+;
+
+expression:
+    value                                           { $$ = codeGenerator->setVarToRegister($1); }
+|   value PLUS value                                { $$ = codeGenerator->doOperation()->add($1, $3); }
+|   value MINUS value                               { $$ = codeGenerator->doOperation()->sub($1, $3); }
+|   value MULTIPLY value                            { $$ = codeGenerator->doOperation()->mul($1, $3); }
+|   value DIVIDE value                              { $$ = codeGenerator->doOperation()->div($1, $3); }
+|   value MODULO value                              { $$ = codeGenerator->doOperation()->mod($1, $3); }
+;
+
+condition:
+    value EQ value                                  { $$ = codeGenerator->makeCondition()->equal($1, $3); }
+|   value NE value                                  { $$ = codeGenerator->makeCondition()->notEqual($1, $3); }
+|   value LT value                                  { $$ = codeGenerator->makeCondition()->less($1, $3); }
+|   value GT value                                  { $$ = codeGenerator->makeCondition()->greater($1, $3); }
+|   value LE value                                  { $$ = codeGenerator->makeCondition()->lessOrEqual($1, $3); }
+|   value GE value                                  { $$ = codeGenerator->makeCondition()->greaterOrEqual($1, $3); }
+;
+
+value:
+    NUM                                             { $$ = memory->getConstant($1); }
+|   identifier
+;
+
+identifier:
+    PIDENTIFIER                                     { $$ = memory->getVariable(*$1); }
+|   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET      { $$ = memory->getArrayVariable(*$1, *$3); }
+|   PIDENTIFIER LBRACKET NUM RBRACKET               { $$ = memory->getArrayVariable(*$1, $3); }
+;
+
+%%
+
+void yyerror(std::string error) {
+    printf("%s\n", error.c_str());
+    exit(1);
+}
+
+int main(int argc, char** argv) {
+    Parameters param(argc, argv);
+    param.checkCorrectness();
+
+    memory = new Memory();
+    codeGenerator = new CodeGenerator(memory);
+
+    yyin = param.input;
+
+    try {
+        yyparse();
+    } catch(std::string error) {
+        yyerror(error);
+    }
+
+    std::string code = codeGenerator->getCode();
+    param.output << code;
+    return 0;
+}

@@ -11,7 +11,7 @@ int yylex();
 %s COMMENT
 %%
 
-  <INITIAL>{
+<INITIAL>{
     "PROCEDURE"     {return PROCEDURE;}
     "PROGRAM"       {return PROGRAM;}
     "VAR"           {return VAR;}
@@ -56,7 +56,7 @@ int yylex();
 
     "["             {BEGIN(COMMENT);}
 
-    [0-9]+          {return yylval.sum = std::stoll(yytext); return NUMBER;}
+    [0-9]+          {return yylval.sum = std::stoll(yytext); return NUM;}
     [_a-z]+         {return yylval.str = new std::string(yytext); return PIDENTIFIER;}
 
     [ \r\t\n]       ;
@@ -65,9 +65,8 @@ int yylex();
   }
   
 <COMMENT>{
-  [^\]]               ;
-  "]"                 { BEGIN(INITIAL); }
-  <<EOF>>             { return INFCOMMENT; }
+[^\]]               ;
+"]"                 { BEGIN(INITIAL); }
 }
 
 %%

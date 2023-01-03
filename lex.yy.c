@@ -671,7 +671,7 @@ YY_DECL
 
 
 #line 15 "lexer.l"
-  <INITIAL>{
+ <INITIAL>{
     "PROCEDURE"     {return PROCEDURE;}
     "PROGRAM"       {return PROGRAM;}
     "VAR"           {return VAR;}
@@ -716,7 +716,7 @@ YY_DECL
 
     "["             {BEGIN(COMMENT);}
 
-    [0-9]+          {return yylval.sum = std::stoll(yytext); return NUMBER;}
+    [0-9]+          {return yylval.sum = std::stoll(yytext); return NUM;}
     [_a-z]+         {return yylval.str = new std::string(yytext); return PIDENTIFIER;}
 
     [ \r\t\n]       ;

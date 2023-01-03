@@ -11,7 +11,7 @@ int yylex();
 %s COMMENT
 %%
 
-<INITIAL>{
+ <INITIAL>{
     "PROCEDURE"     {return PROCEDURE;}
     "PROGRAM"       {return PROGRAM;}
     "VAR"           {return VAR;}

@@ -64,9 +64,9 @@ int yylex();
     .               {return INVALIDCHAR;}
   }
   
-<COMMENT>{
-[^\]]               ;
-"]"                 { BEGIN(INITIAL); }
-}
+  <COMMENT>{
+    [^\]]               ;
+    "]"                 { BEGIN(INITIAL); }
+  }
 
 %%

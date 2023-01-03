@@ -7,7 +7,7 @@ lexer:
 	flex lexer.l
 
 parser:
-	bison -d parser.ypp
+	bison -d parser.y
 
 clean:
 	rm -f parser.tab.* lex.* *.o

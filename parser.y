@@ -9,6 +9,7 @@
     #include <iostream>
   
   // My code includes
+   #include "src/Parameters.h"
 
   extern int yylex();
   extern void yyerror(const char *s);
@@ -138,13 +139,16 @@ void yyerror(std::string error) {
 
 
 int main(int argc, char** argv) {
-   
+    Parameters param(argc, argv);
+    param.checkCorrectness();
+
+   yyin = param.input;
     try {
         yyparse();
     } catch(std::string error) {
         yyerror(error);
     }
 
-
+    param.output << "OK" << std::endl;
     return 0;
 }

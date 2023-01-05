@@ -1,18 +1,19 @@
 %{
   // C++ code
+    #include <string>
     #include <stdio.h>
     #include <stdlib.h>
-    #include <string.h>
     #include <inttypes.h>
     #include <stack>
     #include <memory>
     #include <iostream>
   
   // My code includes
-   #include "src/Parameters.h"
-
   extern int yylex();
-  extern void yyerror(const char *s);
+  extern int yyparses();
+  extern char* yytext;
+
+   void yyerror(const char *s);
 %}
 
 
@@ -28,7 +29,7 @@
 %token VAR        "VAR"
 %token IS         "IS"
 
-%token BEGIN      "BEGIN"
+%token PBEGIN      "PBEGIN"
 %token END        "END"
 
 %token IF         "IF"
@@ -65,6 +66,7 @@
 %token SEMICOLON      ";"
 %token COLON          ":"
 %token COMMA          ","
+%token INVALIDCHAR    "INVALIDCHAR"
 
 %left '-' '+'
 %left '*' '/' '%'
@@ -73,13 +75,13 @@
 program_all : procedures main { std::cout << "program_all" << std::endl; }
 ;
 
-procedures : procedures PROCEDURE proc_head IS VAR declarations BEGIN commands END { std::cout << "procedures" << std::endl; }
-           | procedures PROCEDURE proc_head IS BEGIN commands END { std::cout << "procedures" << std::endl; }
-           | { std::cout << "procedures" << std::endl; }
+procedures : procedures PROCEDURE proc_head IS VAR declarations PBEGIN commands END { std::cout << "procedures" << std::endl; }
+           | procedures PROCEDURE proc_head IS PBEGIN commands END { std::cout << "procedures" << std::endl; }
+           | { std::cout << "procedures end" << std::endl; }
 ;
 
-main : PROGRAM IS VAR declarations BEGIN commands END { std::cout << "main" << std::endl; }
-     | PROGRAM IS BEGIN commands END { std::cout << "main" << std::endl; }
+main : PROGRAM IS VAR declarations PBEGIN commands END { std::cout << "main" << std::endl; }
+     | PROGRAM IS PBEGIN commands END { std::cout << "main" << std::endl; }
 ;
 
 expression : 
@@ -117,6 +119,7 @@ command :
 |  proc_head SEMICOLON { std::cout << "command proc_head" << std::endl; }
 |  READ identifier SEMICOLON { std::cout << "command READ" << std::endl; }
 |  WRITE value SEMICOLON { std::cout << "command WRITE" << std::endl; }
+| {std::cout << "command empty" << std::endl; }
 ;
 
 proc_head : 
@@ -132,23 +135,19 @@ identifier : PIDENTIFIER { std::cout << "identifier" << std::endl; }
 %%
 
 
-void yyerror(std::string error) {
-    printf("%s\n", error.c_str());
+void yyerror(const char* s) {
+    printf("%s\n", s);
     exit(1);
 }
 
 
 int main(int argc, char** argv) {
-    Parameters param(argc, argv);
-    param.checkCorrectness();
-
-   yyin = param.input;
+   
     try {
         yyparse();
     } catch(std::string error) {
-        yyerror(error);
+        yyerror(error.c_str());
     }
 
-    param.output << "OK" << std::endl;
     return 0;
 }

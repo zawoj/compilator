@@ -1,7 +1,7 @@
 all: compile clean
 
 compile: parser lexer
-	g++ -g3 -o compiler lex.yy.c -lfl
+	g++ -g3 -o compiler lex.yy.c parser.tab.c -lfl
 
 lexer:
 	flex lexer.l

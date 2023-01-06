@@ -1,0 +1,234 @@
+{
+  "type": "GLOBALCODE",
+  "procedures": [
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "pa",
+        "variables": [
+          "a",
+          "b"
+        ]
+      },
+      "variables": null,
+      "commands": [
+        {
+          "type": "ASSIGN",
+          "identifier": "a",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "a"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "b"
+            },
+            "operator": "+"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "b",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "a"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "b"
+            },
+            "operator": "-"
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "pb",
+        "variables": [
+          "a",
+          "b"
+        ]
+      },
+      "variables": null,
+      "commands": [
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pa",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pa",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "pc",
+        "variables": [
+          "a",
+          "b"
+        ]
+      },
+      "variables": null,
+      "commands": [
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pb",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pb",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pb",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "pd",
+        "variables": [
+          "a",
+          "b"
+        ]
+      },
+      "variables": null,
+      "commands": [
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pc",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pc",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pc",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": {
+            "type": "PROCCALL",
+            "name": "pc",
+            "values": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "program": {
+    "type": "PROGRAM",
+    "variables": [
+      "a",
+      "b"
+    ],
+    "commands": [
+      {
+        "type": "READ",
+        "value": "a"
+      },
+      {
+        "type": "READ",
+        "value": "b"
+      },
+      {
+        "type": "PROCCALL",
+        "name": {
+          "type": "PROCCALL",
+          "name": "pd",
+          "values": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      {
+        "type": "WRITE",
+        "value": {
+          "type": "IDENTIFIER",
+          "name": "a"
+        }
+      },
+      {
+        "type": "WRITE",
+        "value": {
+          "type": "IDENTIFIER",
+          "name": "b"
+        }
+      }
+    ]
+  }
+}

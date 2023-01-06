@@ -19,6 +19,8 @@
 "WHILE"         return "WHILE"
 "DO"            return "DO"
 "ENDWHILE"      return "ENDWHILE"
+"REPEAT"        return "REPEAT"
+"UNTIL"         return "UNTIL"
 "READ"          return "READ"
 "WRITE"         return "WRITE"
 "+"             return "PLUS"
@@ -60,6 +62,14 @@
    class whileBlock {
       constructor(condition, commands) {
          this.type = "WHILE";
+         this.condition = condition;
+         this.commands = commands;
+      }
+   }
+
+   class repeatBlock {
+      constructor(commands, condition) {
+         this.type = "REPEAT";
          this.condition = condition;
          this.commands = commands;
       }
@@ -389,6 +399,10 @@ command :
 |  WRITE value SEMICOLON { 
      const newWrite = new writeCommand($2)
      $$ = newWrite
+   }
+| REPEAT commands UNTIL condition SEMICOLON { 
+     const newRepeat = new repeatBlock($2, $4)
+     $$ = newRepeat
    }
 | { }
 ;

@@ -1,43 +1,16 @@
-[
-? 0
-? 1
-> 46368
-> 28657
-]
-
-PROCEDURE pa(a,b) IS
-BEGIN
-  a:=a+b;
-  b:=a-b;
-END
-
-PROCEDURE pb(a,b) IS
-BEGIN
-  pa(a,b);
-  pa(a,b);
-END
-
-PROCEDURE pc(a,b) IS
-BEGIN
-  pb(a,b);
-  pb(a,b);
-  pb(a,b);
-END
-
-PROCEDURE pd(a,b) IS
-BEGIN
-  pc(a,b);
-  pc(a,b);
-  pc(a,b);
-  pc(a,b);
-END
-
+[ Binarna postać liczby ]
 PROGRAM IS
-VAR a,b
+VAR n, p
 BEGIN
-  READ a;
-  READ b;
-  pd(a,b);
-  WRITE a;
-  WRITE b;
+    READ n;
+  REPEAT
+	p:=n/2;
+	p:=2*p;
+	IF n>p THEN 
+	    WRITE 1;
+	ELSE 
+	    WRITE 0;
+	ENDIF
+	n:=n/2;
+    UNTIL n=0;
 END

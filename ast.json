@@ -3,8 +3,7 @@
   "program": {
     "type": "PROGRAM",
     "variables": [
-      "n",
-      "p"
+      "n"
     ],
     "commands": [
       {
@@ -12,7 +11,7 @@
         "value": "n"
       },
       {
-        "type": "REPEAT",
+        "type": "WHILE",
         "condition": {
           "left": {
             "type": "IDENTIFIER",
@@ -23,73 +22,15 @@
             "type": "VALUE",
             "value": "0"
           },
-          "operator": "="
+          "operator": ">"
         },
         "commands": [
           {
-            "type": "ASSIGN",
-            "identifier": "p",
+            "type": "WRITE",
             "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "right": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "operator": "/"
+              "type": "IDENTIFIER",
+              "name": "n"
             }
-          },
-          {
-            "type": "ASSIGN",
-            "identifier": "p",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": "*"
-            }
-          },
-          {
-            "type": "IF",
-            "condition": {
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "type": "CONDITION",
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": ">"
-            },
-            "commands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "1"
-                }
-              }
-            ],
-            "elseCommands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "0"
-                }
-              }
-            ]
           },
           {
             "type": "ASSIGN",
@@ -102,9 +43,9 @@
               },
               "right": {
                 "type": "VALUE",
-                "value": "2"
+                "value": "1"
               },
-              "operator": "/"
+              "operator": "-"
             }
           }
         ]

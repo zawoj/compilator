@@ -179,6 +179,7 @@
       }
    }
 
+
    // function getVariableAddress(variableName) {
    //    const variable = globalVariables.find((variable) => variable.name === variableName);
    //    if (!variable) {

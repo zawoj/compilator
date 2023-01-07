@@ -1,3 +1,5 @@
+import AstValidation from './astValidation';
+import { CodeGenerator } from './codeGenerator';
 const Parser = require('jison').Parser;
 const jison = require('jison');
 const fs = require('fs');
@@ -24,6 +26,13 @@ const parser = new Parser(bnf);
 // Pare file ex3.imp and print the AST
 const source = fs.readFileSync('ex3.imp', 'utf8');
 const ast = parser.parse(source);
+
+const astValidation = new AstValidation(ast);
+// console.log(astValidation.errors);
+
+const codeGenerator = new CodeGenerator(ast);
+codeGenerator.generateCode();
+console.log(codeGenerator.getFlatAst());
 
 fs.writeFileSync('ast.json', JSON.stringify(ast, null, 2));
 

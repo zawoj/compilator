@@ -17,12 +17,12 @@
         "value": {
           "type": "EXPRESSION",
           "left": {
-            "type": "VALUE",
-            "value": "2"
+            "type": "IDENTIFIER",
+            "name": "n"
           },
           "right": {
-            "type": "VALUE",
-            "value": "3"
+            "type": "IDENTIFIER",
+            "name": "p"
           },
           "operator": "+"
         }

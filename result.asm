@@ -1,9 +1,6 @@
 [
   "GET 1",
-  "SET 2",
-  "STORE 3",
-  "SET 3",
-  "ADD 3",
-  "LOAD 3",
+  "LOAD 1",
+  "ADD 2",
   "STORE 1"
 ]

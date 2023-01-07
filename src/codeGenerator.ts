@@ -110,7 +110,7 @@ export class CodeGenerator {
       this.flatAst.push(`LOAD ${this.varibles[command.value.name]}`);
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     } else {
-      this.flatAst.push(`LOAD ${this.generateExpression(command.value)}`);
+      this.generateExpression(command.value);
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     }
   }
@@ -144,13 +144,12 @@ export class CodeGenerator {
     );
   }
 
-  generateExpression(command: Expression): string {
+  generateExpression(command: Expression) {
     // Generate asm code for EXPRESSION command and get the varible from the varibles map
     // Check if the value is a number or a variable
-    let toReutrn: string = '';
     switch (command.operator) {
       case '+':
-        toReutrn = addGen(this, command.left, command.right);
+        addGen(this, command.left, command.right);
         break;
       case '-':
         this.flatAst.push(`SUB`);
@@ -164,8 +163,6 @@ export class CodeGenerator {
       default:
         break;
     }
-
-    return toReutrn;
   }
 
   generateIdentifier(command: any) {

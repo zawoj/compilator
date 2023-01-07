@@ -300,8 +300,8 @@ main :
 
 expression : 
    value { 
-      const newExpression = new expression($1, null, null)
-      $$ = newExpression
+      // BCS is a value not an expression
+      $$ = $1
     }
 |  value PLUS value {  
       const newExpressionPlus = new expression($1, $3, $2)

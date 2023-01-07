@@ -1,3 +1,4 @@
+import { addGen } from './generators/expressionGen';
 import {
   Assign,
   astType,
@@ -25,6 +26,10 @@ export class CodeGenerator {
       this.varibles[variable] = this.variblesIndex.toString();
       this.variblesIndex++;
     });
+
+    // Expression value holder
+    this.varibles['exv'] = this.variblesIndex.toString();
+    this.variblesIndex++;
 
     if (this.ast.procedures) {
       this.ast.procedures.forEach((procedure) => {
@@ -97,8 +102,12 @@ export class CodeGenerator {
   generateAssign(command: Assign) {
     // Generate asm code for ASSIGN command and get the varible from the varibles map
     // Check if the value is a number or a variable
+
     if (command.value.type === 'VALUE') {
       this.flatAst.push(`SET ${command.value.value}`);
+      this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
+    } else if (command.value.type === 'IDENTIFIER') {
+      this.flatAst.push(`LOAD ${this.varibles[command.value.name]}`);
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     } else {
       this.flatAst.push(`LOAD ${this.generateExpression(command.value)}`);
@@ -120,7 +129,6 @@ export class CodeGenerator {
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`PUT 0`);
     } else {
-      this.flatAst.push(`LOAD ${this.varibles[command.value.name]}`);
       this.flatAst.push(`PUT ${this.varibles[command.value.name]}`);
     }
   }
@@ -136,32 +144,13 @@ export class CodeGenerator {
     );
   }
 
-  generateExpression(command: Expression) {
+  generateExpression(command: Expression): string {
     // Generate asm code for EXPRESSION command and get the varible from the varibles map
     // Check if the value is a number or a variable
-    if (command.left.type === 'VALUE') {
-      this.flatAst.push(`SET ${command.left.value}`);
-    } else {
-      this.flatAst.push(`LOAD ${this.varibles[command.left.name]}`);
-    }
-
-    if (command.left.type === 'IDENTIFIER') {
-      this.flatAst.push(`STORE ${this.varibles[command.left.name]}`);
-    }
-
-    if (command.right.type === 'VALUE') {
-      this.flatAst.push(`SET ${command.right.value}`);
-    } else {
-      this.flatAst.push(`LOAD ${this.varibles[command.right.name]}`);
-    }
-
-    if (command.right.type === 'IDENTIFIER') {
-      this.flatAst.push(`STORE ${this.varibles[command.right.name]}`);
-    }
-
+    let toReutrn: string = '';
     switch (command.operator) {
       case '+':
-        this.flatAst.push(`ADD`);
+        toReutrn = addGen(this, command.left, command.right);
         break;
       case '-':
         this.flatAst.push(`SUB`);
@@ -175,6 +164,8 @@ export class CodeGenerator {
       default:
         break;
     }
+
+    return toReutrn;
   }
 
   generateIdentifier(command: any) {

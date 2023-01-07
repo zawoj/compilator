@@ -12,102 +12,20 @@
         "value": "n"
       },
       {
-        "type": "REPEAT",
-        "condition": {
+        "type": "ASSIGN",
+        "identifier": "n",
+        "value": {
+          "type": "EXPRESSION",
           "left": {
-            "type": "IDENTIFIER",
-            "name": "n"
+            "type": "VALUE",
+            "value": "2"
           },
-          "type": "CONDITION",
           "right": {
             "type": "VALUE",
-            "value": "0"
+            "value": "3"
           },
-          "operator": "="
-        },
-        "commands": [
-          {
-            "type": "ASSIGN",
-            "identifier": "p",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "right": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "operator": "/"
-            }
-          },
-          {
-            "type": "ASSIGN",
-            "identifier": "p",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": "*"
-            }
-          },
-          {
-            "type": "IF",
-            "condition": {
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "type": "CONDITION",
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": ">"
-            },
-            "commands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "1"
-                }
-              }
-            ],
-            "elseCommands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "0"
-                }
-              }
-            ]
-          },
-          {
-            "type": "ASSIGN",
-            "identifier": "n",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "right": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "operator": "/"
-            }
-          }
-        ]
+          "operator": "+"
+        }
       }
     ]
   }

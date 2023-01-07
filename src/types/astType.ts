@@ -48,7 +48,7 @@ export type If = {
 export type Assign = {
   type: 'ASSIGN';
   identifier: string;
-  value: Value | Expression;
+  value: Value | Expression | Identifier;
 };
 
 export type Read = {

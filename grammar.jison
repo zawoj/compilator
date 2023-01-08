@@ -29,12 +29,10 @@
 "/"             return "DIV"
 "%"             return "MOD"
 ":="            return "ASSIGN"
-"="             return "EQUAL"
-"!="            return "NOTEQUAL"
+"!"            return "NOT"
 "<"             return "LESS"
-"<="            return "LESSEQUAL"
 ">"             return "GREATER"
-">="            return "GREATEREQUAL"
+"="             return "EQUAL"
 "("             return "LPAREN"
 ")"             return "RPAREN"
 ";"             return "SEMICOLON"
@@ -244,12 +242,12 @@
 %token DIV        "/"
 %token MOD        "%"
 
+%token LESSEQUAL     "<="
+%token GREATEREQUAL  ">="
 %token EQUAL         "="
 %token NOTEQUAL      "!="
 %token LESS          "<"
-%token LESSEQUAL     "<="
 %token GREATER       ">"
-%token GREATEREQUAL  ">="
 
 %token LPAREN         "("
 %token RPAREN         ")"
@@ -326,30 +324,30 @@ expression :
 ;
 
 condition : 
-   value EQUAL value {  
-      const newConditionEqual = new condition($1, $3, $2)
-      $$ = newConditionEqual
-    }
-|  value NOTEQUAL value { 
-      const newConditionNotequal = new condition($1, $3, $2)
+   value GREATER value { 
+      const newConditionGreater = new condition($1, $3, $2)
+      $$ = newConditionGreater
+   }
+|  value GREATER EQUAL value { 
+      const newConditionGreaterEqual = new condition($1, $4, `${$2}${$3}`)
+      $$ = newConditionGreaterEqual
+  }
+|  value NOT EQUAL value { 
+      const newConditionGreaterEqual = new condition($1, $4, `${$2}${$3}`)
       $$ = newConditionNotequal
   }
-|  value LESS value { 
+|  value LESS  value { 
       const newConditionLess = new condition($1, $3, $2)
       $$ = newConditionLess
   }
-|  value LESSEQUAL value {  
-      const newConditionLessequal = new condition($1, $3, $2)
+|  value LESS EQUAL value {  
+      const newConditionGreaterEqual = new condition($1, $4, `${$2}${$3}`)
       $$ = newConditionLessequal
  }
-|  value GREATER value { 
-      const newConditionGreater = new condition($1, $3, $2)
-      $$ = newConditionGreater
- }
-|  value GREATEREQUAL value { 
-      const newConditionGreaterEqual = new condition($1, $3, $2)
-      $$ = newConditionGreaterEqual
-  }
+| value EQUAL value {  
+      const newConditionEqual = new condition($1, $3, $2)
+      $$ = newConditionEqual
+    }
 ;
 
 value : 

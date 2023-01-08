@@ -1,4 +1,5 @@
-import { addGen } from './generators/expressionGen';
+import { ConditionGenerator } from './generators/conditionGen';
+import { addGen, subGen } from './generators/expressionGen';
 import {
   Assign,
   astType,
@@ -15,6 +16,7 @@ export class CodeGenerator {
   variblesIndex: number = 1;
   flatAst: string[] = [];
   procedures = new Map<string, Procedure>();
+  labelIndex: number = 0;
 
   constructor(private readonly ast: astType) {}
 
@@ -83,26 +85,35 @@ export class CodeGenerator {
   }
 
   generateIf(command: If) {
-    // Generate asm code for IF command and get the varible from the varibles map
+    const label = this.generateUniqueLabel();
+    const label2 = this.generateUniqueLabel();
+    const conditions = new ConditionGenerator(
+      command.condition,
+      label,
+      label2,
+      this
+    );
+    const conditionCode = conditions.generate().code;
 
-    this.flatAst.push(`IF`);
-    this.generateCondition(command.condition);
-
+    // IF
+    conditionCode.forEach((command) => {
+      this.flatAst.push(command);
+    });
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
 
-    this.flatAst.push(`ELSE`);
-
+    this.flatAst.push(`JUMP ${label2}`);
+    this.flatAst.push(`${label}`);
     command.elseCommands.forEach((command: any) => {
       this.generateCommand(command);
     });
+    this.flatAst.push(`${label2}`);
   }
 
   generateAssign(command: Assign) {
     // Generate asm code for ASSIGN command and get the varible from the varibles map
     // Check if the value is a number or a variable
-
     if (command.value.type === 'VALUE') {
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
@@ -152,7 +163,7 @@ export class CodeGenerator {
         addGen(this, command.left, command.right);
         break;
       case '-':
-        this.flatAst.push(`SUB`);
+        subGen(this, command.left, command.right);
         break;
       case '*':
         this.flatAst.push(`MUL`);
@@ -169,22 +180,50 @@ export class CodeGenerator {
     this.flatAst.push(`IDENTIFIER ${command.value}`);
   }
 
-  generateCondition(command: Condition) {
-    this.flatAst.push(
-      `${
-        command.left.type === 'IDENTIFIER'
-          ? command.left.name
-          : command.left.value
-      } ${command.operator} ${
-        command.right.type === 'IDENTIFIER'
-          ? command.right.name
-          : command.right.value
-      }`
-    );
+  generateUniqueLabel(): string {
+    return `label${this.labelIndex++}`;
   }
 
   getFlatAst() {
     return this.flatAst;
+  }
+
+  astLabelCleaner() {
+    // Get indexs of labels
+    const labelHash = new Map();
+    this.flatAst.forEach((item, index) => {
+      if (
+        item.includes('label') &&
+        !item.includes('JUMP') &&
+        !item.includes('JPOS') &&
+        !item.includes('JZERO') &&
+        !item.includes('JUMPI')
+      ) {
+        labelHash.set(item, index);
+      }
+    });
+
+    // Replace JUMP label with JUMP index and re
+    this.flatAst.forEach((item, index) => {
+      if (item.includes('JUMP')) {
+        const label = item.split(' ')[1];
+        this.flatAst[index] = `JUMP ${labelHash.get(label)}`;
+      } else if (item.includes('JPOS')) {
+        const label = item.split(' ')[1];
+        this.flatAst[index] = `JPOS ${labelHash.get(label)}`;
+      } else if (item.includes('JZERO')) {
+        const label = item.split(' ')[1];
+        this.flatAst[index] = `JZERO ${labelHash.get(label)}`;
+      } else if (item.includes('JUMPI')) {
+        const label = item.split(' ')[1];
+        this.flatAst[index] = `JUMPI ${labelHash.get(label)}`;
+      }
+    });
+
+    // Remove labels
+    this.flatAst = this.flatAst.filter((item) => {
+      return !item.includes('label');
+    });
   }
 
   getProcedures() {

@@ -64,7 +64,7 @@ export type Write = {
 export type Condition = {
   type: 'CONDITION';
   left: Value | Identifier;
-  operator: '>' | '<' | '>=' | '<=' | '==' | '!=';
+  operator: '>' | '<' | '>=' | '<=' | '=' | '!=';
   right: Value | Identifier;
 };
 

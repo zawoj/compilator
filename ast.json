@@ -8,23 +8,44 @@
     ],
     "commands": [
       {
-        "type": "READ",
-        "value": "n"
+        "type": "IF",
+        "condition": {
+          "left": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          },
+          "type": "CONDITION",
+          "right": {
+            "type": "IDENTIFIER",
+            "name": "p"
+          },
+          "operator": ">="
+        },
+        "commands": [
+          {
+            "type": "WRITE",
+            "value": {
+              "type": "VALUE",
+              "value": "0"
+            }
+          }
+        ],
+        "elseCommands": [
+          {
+            "type": "WRITE",
+            "value": {
+              "type": "IDENTIFIER",
+              "name": "p"
+            }
+          }
+        ]
       },
       {
         "type": "ASSIGN",
         "identifier": "n",
         "value": {
-          "type": "EXPRESSION",
-          "left": {
-            "type": "IDENTIFIER",
-            "name": "n"
-          },
-          "right": {
-            "type": "IDENTIFIER",
-            "name": "p"
-          },
-          "operator": "+"
+          "type": "VALUE",
+          "value": "2"
         }
       }
     ]

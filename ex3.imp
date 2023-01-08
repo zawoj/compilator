@@ -2,7 +2,10 @@
 PROGRAM IS
 VAR n, p
 BEGIN
-    READ n;
-		n := n + p; 
-	
+    IF n >= p THEN
+        WRITE 0;
+    ELSE
+        WRITE p;
+    ENDIF
+    n := 2;
 END

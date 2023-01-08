@@ -33,10 +33,7 @@ const astValidation = new AstValidation(ast);
 
 const codeGenerator = new CodeGenerator(ast);
 codeGenerator.generateCode();
-fs.writeFileSync(
-  'result.asm',
-  JSON.stringify(codeGenerator.getFlatAst(), null, 2)
-);
-console.log(codeGenerator.getFlatAst());
+codeGenerator.astLabelCleaner();
+fs.writeFileSync('result.asm', codeGenerator.getFlatAst().join('\r\n'));
 
 module.exports = parser;

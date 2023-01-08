@@ -2,7 +2,7 @@
 PROGRAM IS
 VAR n, p
 BEGIN
-    IF n >= p THEN
+    IF 6 >= 5 THEN
         WRITE 0;
     ELSE
         WRITE p;

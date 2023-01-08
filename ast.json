@@ -11,13 +11,13 @@
         "type": "IF",
         "condition": {
           "left": {
-            "type": "IDENTIFIER",
-            "name": "n"
+            "type": "VALUE",
+            "value": "6"
           },
           "type": "CONDITION",
           "right": {
-            "type": "IDENTIFIER",
-            "name": "p"
+            "type": "VALUE",
+            "value": "5"
           },
           "operator": ">="
         },

@@ -333,7 +333,7 @@ condition :
       $$ = newConditionGreaterEqual
   }
 |  value NOT EQUAL value { 
-      const newConditionGreaterEqual = new condition($1, $4, `${$2}${$3}`)
+      const newConditionNotEqual = new condition($1, $4, `${$2}${$3}`)
       $$ = newConditionNotequal
   }
 |  value LESS  value { 
@@ -341,7 +341,7 @@ condition :
       $$ = newConditionLess
   }
 |  value LESS EQUAL value {  
-      const newConditionGreaterEqual = new condition($1, $4, `${$2}${$3}`)
+      const newConditionLessEqual = new condition($1, $4, `${$2}${$3}`)
       $$ = newConditionLessequal
  }
 | value EQUAL value {  

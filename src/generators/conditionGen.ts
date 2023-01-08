@@ -23,7 +23,6 @@ export class ConditionGenerator {
   generate(): {
     code: string[];
   } {
-    console.log('condition', this.conditon);
     switch (this.conditon.operator) {
       case '=':
         this.equal();
@@ -51,15 +50,23 @@ export class ConditionGenerator {
       code: this.code,
     };
   }
+  // ???
   equal() {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -69,6 +76,13 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -78,6 +92,13 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
     } else if (
       this.conditon.left.type === 'VALUE' &&
@@ -87,6 +108,13 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
     }
   }
@@ -96,10 +124,17 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -109,6 +144,13 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -118,6 +160,13 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'VALUE' &&
@@ -127,58 +176,70 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
 
+  lessThan() {
+    if (
+      this.conditon.left.type === 'VALUE' &&
+      this.conditon.right.type === 'VALUE'
+    ) {
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
+    } else if (
+      this.conditon.left.type === 'IDENTIFIER' &&
+      this.conditon.right.type === 'IDENTIFIER'
+    ) {
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
+    } else if (
+      this.conditon.left.type === 'IDENTIFIER' &&
+      this.conditon.right.type === 'VALUE'
+    ) {
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
+    } else if (
+      this.conditon.left.type === 'VALUE' &&
+      this.conditon.right.type === 'IDENTIFIER'
+    ) {
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
+    }
+  }
   greaterThan() {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
       this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
-    } else if (
-      this.conditon.left.type === 'IDENTIFIER' &&
-      this.conditon.right.type === 'IDENTIFIER'
-    ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
-    } else if (
-      this.conditon.left.type === 'IDENTIFIER' &&
-      this.conditon.right.type === 'VALUE'
-    ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
-    } else if (
-      this.conditon.left.type === 'VALUE' &&
-      this.conditon.right.type === 'IDENTIFIER'
-    ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
-    }
-  }
-  lessThan() {
-    if (
-      this.conditon.left.type === 'VALUE' &&
-      this.conditon.right.type === 'VALUE'
-    ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -188,6 +249,7 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
@@ -197,6 +259,7 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'VALUE' &&
@@ -206,6 +269,7 @@ export class ConditionGenerator {
       this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
@@ -214,37 +278,41 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
@@ -254,10 +322,11 @@ export class ConditionGenerator {
       this.conditon.right.type === 'VALUE'
     ) {
       this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
@@ -266,25 +335,28 @@ export class ConditionGenerator {
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
     } else if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
+      this.code.push(`JZERO ${this.trueLabelJump}`);
+      this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
 }

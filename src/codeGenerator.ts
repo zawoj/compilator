@@ -85,30 +85,34 @@ export class CodeGenerator {
   }
 
   generateIf(command: If) {
-    const label = this.generateUniqueLabel();
-    const label2 = this.generateUniqueLabel();
+    const trueLabel = this.generateUniqueLabel();
+    const falseLabel = this.generateUniqueLabel();
+    const label3 = this.generateUniqueLabel();
+
     const conditions = new ConditionGenerator(
       command.condition,
-      label,
-      label2,
+      trueLabel,
+      falseLabel,
       this
     );
     const conditionCode = conditions.generate().code;
 
-    // IF
     conditionCode.forEach((command) => {
       this.flatAst.push(command);
     });
+    // IF COMMANDS
+    this.flatAst.push(`${trueLabel}`);
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
 
-    this.flatAst.push(`JUMP ${label2}`);
-    this.flatAst.push(`${label}`);
+    this.flatAst.push(`JUMP ${label3}`);
+    this.flatAst.push(`${falseLabel}`);
+    // ELSE COMMENDS
     command.elseCommands.forEach((command: any) => {
       this.generateCommand(command);
     });
-    this.flatAst.push(`${label2}`);
+    this.flatAst.push(`${label3}`);
   }
 
   generateAssign(command: Assign) {
@@ -150,9 +154,7 @@ export class CodeGenerator {
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
-    this.flatAst.push(
-      `UNTIL ${command.condition.type} ${command.condition.value} jump to ${repeatIndex}`
-    );
+    this.flatAst.push(`JUMP ${repeatIndex}`);
   }
 
   generateExpression(command: Expression) {

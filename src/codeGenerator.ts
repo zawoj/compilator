@@ -76,12 +76,27 @@ export class CodeGenerator {
   }
 
   generateWhile(command: any) {
-    this.flatAst.push(
-      `WHILE ${command.condition.type} ${command.condition.value}`
+    const trueLabel = this.generateUniqueLabel();
+    const falseLabel = this.generateUniqueLabel();
+    const returnLabel = this.generateUniqueLabel();
+    const conditions = new ConditionGenerator(
+      command.condition,
+      trueLabel,
+      falseLabel,
+      this
     );
+    const conditionCode = conditions.generate().code;
+
+    this.flatAst.push(`${returnLabel}`);
+    conditionCode.forEach((command) => {
+      this.flatAst.push(command);
+    });
+    this.flatAst.push(`${trueLabel}`);
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
+    this.flatAst.push(`JUMP ${returnLabel}`);
+    this.flatAst.push(`${falseLabel}`);
   }
 
   generateIf(command: If) {
@@ -106,13 +121,17 @@ export class CodeGenerator {
       this.generateCommand(command);
     });
 
-    this.flatAst.push(`JUMP ${label3}`);
-    this.flatAst.push(`${falseLabel}`);
-    // ELSE COMMENDS
-    command.elseCommands.forEach((command: any) => {
-      this.generateCommand(command);
-    });
-    this.flatAst.push(`${label3}`);
+    if (command.elseCommands.length > 0) {
+      this.flatAst.push(`JUMP ${label3}`);
+      this.flatAst.push(`${falseLabel}`);
+      // ELSE COMMENDS
+      command.elseCommands.forEach((command: any) => {
+        this.generateCommand(command);
+      });
+      this.flatAst.push(`${label3}`);
+    } else {
+      this.flatAst.push(`${falseLabel}`);
+    }
   }
 
   generateAssign(command: Assign) {
@@ -149,12 +168,24 @@ export class CodeGenerator {
   }
 
   generateRepeat(command: any) {
-    let repeatIndex = this.flatAst.length + 1;
-    this.flatAst.push(`REPEAT`);
+    const trueLabel = this.generateUniqueLabel();
+    const falseLabel = this.generateUniqueLabel();
+    const conditions = new ConditionGenerator(
+      command.condition,
+      trueLabel,
+      falseLabel,
+      this
+    );
+    const conditionCode = conditions.generate().code;
+
+    this.flatAst.push(`${trueLabel}`);
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
-    this.flatAst.push(`JUMP ${repeatIndex}`);
+    conditionCode.forEach((command) => {
+      this.flatAst.push(command);
+    });
+    this.flatAst.push(`${falseLabel}`);
   }
 
   generateExpression(command: Expression) {

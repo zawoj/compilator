@@ -342,7 +342,7 @@ condition :
   }
 |  value LESS EQUAL value {  
       const newConditionLessEqual = new condition($1, $4, `${$2}${$3}`)
-      $$ = newConditionLessequal
+      $$ = newConditionLessEqual
  }
 | value EQUAL value {  
       const newConditionEqual = new condition($1, $3, $2)

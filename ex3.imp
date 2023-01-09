@@ -1,11 +1,7 @@
 [ Binarna postać liczby ]
 PROGRAM IS
-VAR n, p
+VAR x,y
 BEGIN
-    IF 6 >= 5 THEN
-        WRITE 0;
-    ELSE
-        WRITE p;
-    ENDIF
-    n := 2;
+ y := 6;
+ x := y/3;
 END

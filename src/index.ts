@@ -26,7 +26,6 @@ const parser = new Parser(bnf);
 // Pare file ex3.imp and print the AST
 const source = fs.readFileSync('ex3.imp', 'utf8');
 const ast = parser.parse(source);
-fs.writeFileSync('ast.json', JSON.stringify(ast, null, 2));
 
 const astValidation = new AstValidation(ast);
 // console.log(astValidation.errors);
@@ -34,6 +33,7 @@ const astValidation = new AstValidation(ast);
 const codeGenerator = new CodeGenerator(ast);
 codeGenerator.generateCode();
 codeGenerator.astLabelCleaner();
+fs.writeFileSync('ast.json', JSON.stringify(ast, null, 2));
 fs.writeFileSync('result.asm', codeGenerator.getFlatAst().join('\r\n'));
 
 module.exports = parser;

@@ -1,5 +1,5 @@
 import { ConditionGenerator } from './generators/conditionGen';
-import { addGen, subGen } from './generators/expressionGen';
+import { addGen, divGen, mulGen, subGen } from './generators/expressionGen';
 import {
   Assign,
   astType,
@@ -8,6 +8,7 @@ import {
   If,
   Procedure,
   Read,
+  While,
   Write,
 } from './types/astType';
 
@@ -67,15 +68,12 @@ export class CodeGenerator {
       case 'EXPRESSION':
         this.generateExpression(command);
         break;
-      case 'IDENTIFIER':
-        this.generateIdentifier(command);
-        break;
       default:
         break;
     }
   }
 
-  generateWhile(command: any) {
+  generateWhile(command: While) {
     const trueLabel = this.generateUniqueLabel();
     const falseLabel = this.generateUniqueLabel();
     const returnLabel = this.generateUniqueLabel();
@@ -178,14 +176,14 @@ export class CodeGenerator {
     );
     const conditionCode = conditions.generate().code;
 
-    this.flatAst.push(`${trueLabel}`);
+    this.flatAst.push(`${falseLabel}`);
     command.commands.forEach((command: any) => {
       this.generateCommand(command);
     });
     conditionCode.forEach((command) => {
       this.flatAst.push(command);
     });
-    this.flatAst.push(`${falseLabel}`);
+    this.flatAst.push(`${trueLabel}`);
   }
 
   generateExpression(command: Expression) {
@@ -199,18 +197,14 @@ export class CodeGenerator {
         subGen(this, command.left, command.right);
         break;
       case '*':
-        this.flatAst.push(`MUL`);
+        mulGen(this, command.left, command.right);
         break;
       case '/':
-        this.flatAst.push(`DIV`);
+        divGen(this, command.left, command.right);
         break;
       default:
         break;
     }
-  }
-
-  generateIdentifier(command: any) {
-    this.flatAst.push(`IDENTIFIER ${command.value}`);
   }
 
   generateUniqueLabel(): string {
@@ -257,6 +251,12 @@ export class CodeGenerator {
     this.flatAst = this.flatAst.filter((item) => {
       return !item.includes('label');
     });
+  }
+  // Generate unique varibles and return name
+  generateUniqueVar() {
+    this.variblesIndex++;
+    this.varibles[`var${this.variblesIndex}`] = this.variblesIndex.toString();
+    return `var${this.variblesIndex}`;
   }
 
   getProcedures() {

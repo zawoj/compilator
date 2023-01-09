@@ -78,9 +78,9 @@ export class ConditionGenerator {
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);

@@ -3,19 +3,20 @@
   "program": {
     "type": "PROGRAM",
     "variables": [
-      "x"
+      "n",
+      "p"
     ],
     "commands": [
       {
         "type": "READ",
-        "value": "x"
+        "value": "n"
       },
       {
-        "type": "IF",
+        "type": "REPEAT",
         "condition": {
           "left": {
             "type": "IDENTIFIER",
-            "name": "x"
+            "name": "n"
           },
           "type": "CONDITION",
           "right": {
@@ -26,19 +27,84 @@
         },
         "commands": [
           {
-            "type": "WRITE",
+            "type": "ASSIGN",
+            "identifier": "p",
             "value": {
-              "type": "VALUE",
-              "value": "1"
+              "type": "EXPRESSION",
+              "left": {
+                "type": "IDENTIFIER",
+                "name": "n"
+              },
+              "right": {
+                "type": "VALUE",
+                "value": "2"
+              },
+              "operator": "/"
             }
-          }
-        ],
-        "elseCommands": [
+          },
           {
-            "type": "WRITE",
+            "type": "ASSIGN",
+            "identifier": "p",
             "value": {
-              "type": "VALUE",
-              "value": "0"
+              "type": "EXPRESSION",
+              "left": {
+                "type": "VALUE",
+                "value": "2"
+              },
+              "right": {
+                "type": "IDENTIFIER",
+                "name": "p"
+              },
+              "operator": "*"
+            }
+          },
+          {
+            "type": "IF",
+            "condition": {
+              "left": {
+                "type": "IDENTIFIER",
+                "name": "n"
+              },
+              "type": "CONDITION",
+              "right": {
+                "type": "IDENTIFIER",
+                "name": "p"
+              },
+              "operator": ">"
+            },
+            "commands": [
+              {
+                "type": "WRITE",
+                "value": {
+                  "type": "VALUE",
+                  "value": "1"
+                }
+              }
+            ],
+            "elseCommands": [
+              {
+                "type": "WRITE",
+                "value": {
+                  "type": "VALUE",
+                  "value": "0"
+                }
+              }
+            ]
+          },
+          {
+            "type": "ASSIGN",
+            "identifier": "n",
+            "value": {
+              "type": "EXPRESSION",
+              "left": {
+                "type": "IDENTIFIER",
+                "name": "n"
+              },
+              "right": {
+                "type": "VALUE",
+                "value": "2"
+              },
+              "operator": "/"
             }
           }
         ]

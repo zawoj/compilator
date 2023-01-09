@@ -50,7 +50,6 @@ export class ConditionGenerator {
       code: this.code,
     };
   }
-  // ???
   equal() {
     if (
       this.conditon.left.type === 'VALUE' &&

@@ -1,16 +1,19 @@
-[ Binarna postać liczby ]
-PROGRAM IS
-VAR n, p
+PROCEDURE check(n) IS
+VAR r
 BEGIN
-    READ n;
-    REPEAT
-	p:=n/2;
-	p:=2*p;
-	IF n>p THEN 
-	    WRITE 1;
-	ELSE 
-	    WRITE 0;
-	ENDIF
-	n:=n/2;
-    UNTIL n=0;
+    WRITE n;
+END
+
+PROCEDURE checkv(n) IS
+VAR r
+BEGIN
+    WRITE n;
+END
+
+PROGRAM IS
+VAR n
+BEGIN
+   READ n;
+   check(n);
+   checkv(n);
 END

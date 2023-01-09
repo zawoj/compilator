@@ -122,10 +122,10 @@
    }
 
    class procCall {
-      constructor(name, values) {
+      constructor(name, variables) {
          this.type = "PROCCALL";
          this.name = name;
-         this.values = values;
+         this.variables = variables;
       }
    }
 
@@ -270,8 +270,13 @@ program_all : procedures main {
 
 procedures : 
    procedures PROCEDURE proc_head IS VAR declarations PBEGIN commands END { 
-      const newProcedureVar = new procedure($proc_head, $7, $commands)
-      $$ = newProcedureVar
+      const newProcedureVar = new procedure($proc_head, $declarations, $commands)
+      if($procedures !== undefined){
+         $procedures.push(newProcedureVar)
+         $$ = $procedures
+      } else {
+         $$ = [newProcedureVar]
+      }
    }
 |  procedures PROCEDURE proc_head IS PBEGIN commands END {
       const newProcedure = new procedure($proc_head, null, $commands)
@@ -388,8 +393,7 @@ command :
       $$ = newWhile
   }
 |  proc_call SEMICOLON { 
-      const newProcCall = new procCall($1)
-      $$ = newProcCall
+      $$ = $1
   }
 |  READ identifier SEMICOLON { 
        const newRead = new readCommand($2)
@@ -427,7 +431,7 @@ declarations_proc COMMA identifier {
 // console.log(`in proc: ${$1}`)
 proc_call : 
    identifier LPAREN proc_args RPAREN { 
-      const newProcCallIN = new procCall($1, $3)
+      const newProcCallIN = new procCall($identifier, $proc_args)
       $$ = newProcCallIN
      }
 ;

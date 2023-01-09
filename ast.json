@@ -1,10 +1,57 @@
 {
   "type": "GLOBALCODE",
+  "procedures": [
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "check",
+        "variables": [
+          "n"
+        ]
+      },
+      "variables": [
+        "r"
+      ],
+      "commands": [
+        {
+          "type": "WRITE",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          }
+        }
+      ],
+      "jumpLabel": "label0"
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "checkv",
+        "variables": [
+          "n"
+        ]
+      },
+      "variables": [
+        "r"
+      ],
+      "commands": [
+        {
+          "type": "WRITE",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          }
+        }
+      ],
+      "jumpLabel": "label1"
+    }
+  ],
   "program": {
     "type": "PROGRAM",
     "variables": [
-      "n",
-      "p"
+      "n"
     ],
     "commands": [
       {
@@ -12,101 +59,17 @@
         "value": "n"
       },
       {
-        "type": "REPEAT",
-        "condition": {
-          "left": {
-            "type": "IDENTIFIER",
-            "name": "n"
-          },
-          "type": "CONDITION",
-          "right": {
-            "type": "VALUE",
-            "value": "0"
-          },
-          "operator": "="
-        },
-        "commands": [
-          {
-            "type": "ASSIGN",
-            "identifier": "p",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "right": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "operator": "/"
-            }
-          },
-          {
-            "type": "ASSIGN",
-            "identifier": "p",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": "*"
-            }
-          },
-          {
-            "type": "IF",
-            "condition": {
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "type": "CONDITION",
-              "right": {
-                "type": "IDENTIFIER",
-                "name": "p"
-              },
-              "operator": ">"
-            },
-            "commands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "1"
-                }
-              }
-            ],
-            "elseCommands": [
-              {
-                "type": "WRITE",
-                "value": {
-                  "type": "VALUE",
-                  "value": "0"
-                }
-              }
-            ]
-          },
-          {
-            "type": "ASSIGN",
-            "identifier": "n",
-            "value": {
-              "type": "EXPRESSION",
-              "left": {
-                "type": "IDENTIFIER",
-                "name": "n"
-              },
-              "right": {
-                "type": "VALUE",
-                "value": "2"
-              },
-              "operator": "/"
-            }
-          }
+        "type": "PROCCALL",
+        "name": "check",
+        "variables": [
+          "n"
+        ]
+      },
+      {
+        "type": "PROCCALL",
+        "name": "checkv",
+        "variables": [
+          "n"
         ]
       }
     ]

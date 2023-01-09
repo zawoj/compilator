@@ -5,9 +5,15 @@ export type astType = {
 };
 
 export type Procedure = {
-  name: string;
-  parameters: any[];
-  body: any;
+  type: 'PROCEDURE';
+  head: {
+    type: 'PROCHEADER';
+    name: string;
+    variables: string[];
+  };
+  variables: string[];
+  commands: commands[];
+  jumpLabel: string;
 };
 
 export type Program = {
@@ -83,4 +89,10 @@ export type Identifier = {
 export type Value = {
   type: 'VALUE';
   value: string | number;
+};
+
+export type ProcCall = {
+  type: 'PROCCALL';
+  name: string;
+  variables: string[];
 };

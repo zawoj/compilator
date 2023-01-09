@@ -12,6 +12,7 @@ import {
   Condition,
   Expression,
   If,
+  ProcCall,
   Procedure,
   Read,
   While,
@@ -40,12 +41,28 @@ export class CodeGenerator {
     this.varibles['exv'] = this.variblesIndex.toString();
     this.variblesIndex++;
 
+    // Change procedures into MAP and set thiers backVariable
     if (this.ast.procedures) {
       this.ast.procedures.forEach((procedure) => {
-        this.procedures.set(procedure.name, procedure);
+        procedure.jumpLabel = this.generateUniqueLabel();
+        this.procedures.set(procedure.head.name, procedure);
+        this.varibles[procedure.head.name + 'back'] =
+          this.variblesIndex.toString();
+        this.variblesIndex++;
       });
     }
+    const startLabel = this.generateUniqueLabel();
+    this.flatAst.push(`JUMP ${startLabel}`);
+    // Genereate procedures
+    this.procedures.forEach((proc: Procedure) => {
+      proc.variables.forEach((variable) => {
+        this.varibles[variable] = this.variblesIndex.toString();
+        this.variblesIndex++;
+      });
+      this.generateProc(proc);
+    });
 
+    this.flatAst.push(`${startLabel}`);
     this.ast.program.commands.forEach((command) => {
       this.generateCommand(command);
     });
@@ -74,6 +91,8 @@ export class CodeGenerator {
       case 'EXPRESSION':
         this.generateExpression(command);
         break;
+      case 'PROCCALL':
+        this.generateProcCall(command);
       default:
         break;
     }
@@ -216,6 +235,25 @@ export class CodeGenerator {
     }
   }
 
+  generateProcCall(proc: ProcCall) {
+    const thisProc = this.procedures.get(proc.name);
+    const jumpLabel = this.generateUniqueLabel();
+    this.flatAst.push(`SET ${jumpLabel}`);
+    this.flatAst.push(`STORE ${this.varibles[proc.name + 'back']}`);
+    this.flatAst.push(`JUMP ${thisProc?.jumpLabel}`);
+    this.flatAst.push(`${jumpLabel}`);
+  }
+
+  generateProc(proc: Procedure) {
+    this.flatAst.push(`${proc.jumpLabel}`);
+    proc.commands.forEach((command: any) => {
+      this.generateCommand(command);
+    });
+    this.flatAst.push(`JUMPI ${this.varibles[proc.head.name + 'back']}`);
+  }
+
+  // HELPER METHODS //
+
   generateUniqueLabel(): string {
     return `label${this.labelIndex++}`;
   }
@@ -227,14 +265,15 @@ export class CodeGenerator {
   astLabelCleaner() {
     // Get indexs of labels
     const labelHash = new Map();
-    let iterationCorrection:number = 0
+    let iterationCorrection: number = 0;
     this.flatAst.forEach((item, index) => {
       if (
         item.includes('label') &&
         !item.includes('JUMP') &&
         !item.includes('JPOS') &&
         !item.includes('JZERO') &&
-        !item.includes('JUMPI')
+        !item.includes('JUMPI') &&
+        !item.includes('SET')
       ) {
         labelHash.set(item, index - iterationCorrection);
         iterationCorrection++;
@@ -243,7 +282,7 @@ export class CodeGenerator {
 
     // Replace JUMP label with JUMP index and re
     this.flatAst.forEach((item, index) => {
-      if (item.includes('JUMP')) {
+      if (item.includes('JUMP') && !item.includes('JUMPI')) {
         const label = item.split(' ')[1];
         this.flatAst[index] = `JUMP ${labelHash.get(label)}`;
       } else if (item.includes('JPOS')) {
@@ -254,7 +293,14 @@ export class CodeGenerator {
         this.flatAst[index] = `JZERO ${labelHash.get(label)}`;
       } else if (item.includes('JUMPI')) {
         const label = item.split(' ')[1];
-        this.flatAst[index] = `JUMPI ${labelHash.get(label)}`;
+        if (label.includes('label')) {
+          this.flatAst[index] = `JUMPI ${labelHash.get(label)}`;
+        }
+      } else if (item.includes('SET')) {
+        const label = item.split(' ')[1];
+        if (label.includes('label')) {
+          this.flatAst[index] = `SET ${labelHash.get(label)}`;
+        }
       }
     });
 
@@ -270,11 +316,8 @@ export class CodeGenerator {
     return `var${this.variblesIndex}`;
   }
 
-  getProcedures() {
-    return this.procedures;
-  }
-
+  // END PROGRAM
   endProgram() {
-    this.flatAst.push("HALT")
+    this.flatAst.push('HALT');
   }
 }

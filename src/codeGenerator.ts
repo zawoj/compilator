@@ -1,5 +1,11 @@
 import { ConditionGenerator } from './generators/conditionGen';
-import { addGen, divGen, mulGen, subGen } from './generators/expressionGen';
+import {
+  addGen,
+  divGen,
+  modGen,
+  mulGen,
+  subGen,
+} from './generators/expressionGen';
 import {
   Assign,
   astType,
@@ -143,7 +149,7 @@ export class CodeGenerator {
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     } else {
       this.generateExpression(command.value);
-      this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
+      // this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     }
   }
 
@@ -201,6 +207,9 @@ export class CodeGenerator {
         break;
       case '/':
         divGen(this, command.left, command.right);
+        break;
+      case '%':
+        modGen(this, command.left, command.right);
         break;
       default:
         break;

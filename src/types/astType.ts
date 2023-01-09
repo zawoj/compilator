@@ -71,7 +71,7 @@ export type Condition = {
 export type Expression = {
   type: 'EXPRESSION';
   left: Value | Identifier;
-  operator: '+' | '-' | '*' | '/';
+  operator: '+' | '-' | '*' | '/' | '%';
   right: Value | Identifier;
 };
 

@@ -490,3 +490,135 @@ export const divGen = (
     codeGen.flatAst.push(`LOAD ${codeGen.varibles[rc]}`);
   }
 };
+
+export const modGen = (
+  codeGen: CodeGenerator,
+  left: Identifier | Value,
+  right: Identifier | Value
+) => {
+  const ra = codeGen.generateUniqueVar();
+  const rb = codeGen.generateUniqueVar();
+  const rc = codeGen.generateUniqueVar();
+  const rd = codeGen.generateUniqueVar();
+  const re = codeGen.generateUniqueVar();
+
+  codeGen.generateAssign({
+    type: 'ASSIGN',
+    identifier: ra,
+    value: left,
+  });
+  codeGen.generateAssign({
+    type: 'ASSIGN',
+    identifier: 'rd',
+    value: {
+      type: 'VALUE',
+      value: '0',
+    },
+  });
+  codeGen.generateWhile({
+    type: 'WHILE',
+    condition: {
+      left: right,
+      type: 'CONDITION',
+      right: {
+        type: 'IDENTIFIER',
+        name: ra,
+      },
+      operator: '<=',
+    },
+    commands: [
+      {
+        type: 'ASSIGN',
+        identifier: rc,
+        value: right,
+      },
+      {
+        type: 'WHILE',
+        condition: {
+          left: {
+            type: 'IDENTIFIER',
+            name: rc,
+          },
+          type: 'CONDITION',
+          right: {
+            type: 'IDENTIFIER',
+            name: ra,
+          },
+          operator: '<=',
+        },
+        commands: [
+          {
+            type: 'ASSIGN',
+            identifier: rc,
+            value: {
+              type: 'EXPRESSION',
+              left: {
+                type: 'IDENTIFIER',
+                name: rc,
+              },
+              right: {
+                type: 'IDENTIFIER',
+                name: rc,
+              },
+              operator: '+',
+            },
+          },
+        ],
+      },
+      {
+        type: 'ASSIGN',
+        identifier: rc,
+        value: {
+          type: 'EXPRESSION',
+          left: {
+            type: 'IDENTIFIER',
+            name: rc,
+          },
+          right: {
+            type: 'VALUE',
+            value: '2',
+          },
+          operator: '/',
+        },
+      },
+      {
+        type: 'ASSIGN',
+        identifier: ra,
+        value: {
+          type: 'EXPRESSION',
+          left: {
+            type: 'IDENTIFIER',
+            name: ra,
+          },
+          right: {
+            type: 'IDENTIFIER',
+            name: rc,
+          },
+          operator: '-',
+        },
+      },
+      {
+        type: 'ASSIGN',
+        identifier: rd,
+        value: {
+          type: 'EXPRESSION',
+          left: {
+            type: 'IDENTIFIER',
+            name: rd,
+          },
+          right: {
+            type: 'IDENTIFIER',
+            name: rc,
+          },
+          operator: '+',
+        },
+      },
+    ],
+  });
+  if (left.type === 'IDENTIFIER') {
+    codeGen.flatAst.push(`LOAD ${left.name}`);
+  } else {
+    codeGen.flatAst.push(`LOAD ${left.value}`);
+  }
+  codeGen.flatAst.push(`SUB ${codeGen.varibles[rd]}`);
+};

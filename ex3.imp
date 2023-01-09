@@ -2,6 +2,5 @@
 PROGRAM IS
 VAR x,y
 BEGIN
- y := 6;
- x := y/3;
+  
 END

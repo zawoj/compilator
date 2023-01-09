@@ -2,35 +2,7 @@
   "type": "GLOBALCODE",
   "program": {
     "type": "PROGRAM",
-    "variables": [
-      "x",
-      "y"
-    ],
-    "commands": [
-      {
-        "type": "ASSIGN",
-        "identifier": "y",
-        "value": {
-          "type": "VALUE",
-          "value": "6"
-        }
-      },
-      {
-        "type": "ASSIGN",
-        "identifier": "x",
-        "value": {
-          "type": "EXPRESSION",
-          "left": {
-            "type": "IDENTIFIER",
-            "name": "y"
-          },
-          "right": {
-            "type": "VALUE",
-            "value": "3"
-          },
-          "operator": "/"
-        }
-      }
-    ]
+    "variables": ["x", "y"],
+    "commands": []
   }
 }

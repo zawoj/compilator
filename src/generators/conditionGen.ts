@@ -72,15 +72,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
@@ -88,9 +88,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
@@ -104,15 +104,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
@@ -140,15 +140,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -172,15 +172,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -192,9 +192,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -202,9 +202,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -212,9 +212,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -222,9 +222,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -235,9 +235,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -245,9 +245,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -255,9 +255,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -265,9 +265,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`LOAD ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -278,9 +278,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -288,9 +288,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -298,9 +298,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -321,9 +321,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      this.code.push(`SET ${this.conditon.left.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -331,9 +331,9 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.right.name]}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`LOAD ${this.codeGen.varibles[this.conditon.left.name]}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);

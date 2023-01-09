@@ -1,28 +1,18 @@
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
-in proc: a
-in proc: b
+ rc := 0;
+  IF 0 < y THEN
+  rb := y;
+  ra := x;
+  WHILE rb < ra DO
+  rd := 1;
+  re := rb;
+  WHILE re <= ra DO
+    re := re + re;
+    rd := rd + rd;
+  ENDWHILE
+  WRITE rd;
+    rd := rd / 2;
+    re := re / 2;
+    rc := rc + rd;
+    ra := ra - re;
+  ENDWHILE
+  ENDIF

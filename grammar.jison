@@ -334,7 +334,7 @@ condition :
   }
 |  value NOT EQUAL value { 
       const newConditionNotEqual = new condition($1, $4, `${$2}${$3}`)
-      $$ = newConditionNotequal
+      $$ = newConditionNotEqual
   }
 |  value LESS  value { 
       const newConditionLess = new condition($1, $3, $2)

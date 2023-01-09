@@ -149,7 +149,7 @@ export class CodeGenerator {
       this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     } else {
       this.generateExpression(command.value);
-      // this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
+      this.flatAst.push(`STORE ${this.varibles[command.identifier]}`);
     }
   }
 
@@ -227,6 +227,7 @@ export class CodeGenerator {
   astLabelCleaner() {
     // Get indexs of labels
     const labelHash = new Map();
+    let iterationCorrection:number = 0
     this.flatAst.forEach((item, index) => {
       if (
         item.includes('label') &&
@@ -235,7 +236,8 @@ export class CodeGenerator {
         !item.includes('JZERO') &&
         !item.includes('JUMPI')
       ) {
-        labelHash.set(item, index);
+        labelHash.set(item, index - iterationCorrection);
+        iterationCorrection++;
       }
     });
 
@@ -270,5 +272,9 @@ export class CodeGenerator {
 
   getProcedures() {
     return this.procedures;
+  }
+
+  endProgram() {
+    this.flatAst.push("HALT")
   }
 }

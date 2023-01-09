@@ -24,7 +24,7 @@ export const addGen = (
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
-    codeGen.flatAst.push(`STORE ${codeGen.varibles[left.name]}`);
+    codeGen.flatAst.push(`LOAD ${codeGen.varibles[left.name]}`);
     codeGen.flatAst.push(`ADD ${codeGen.varibles[right.name]}`);
   }
 };
@@ -48,7 +48,9 @@ export const subGen = (
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
     codeGen.flatAst.push(`SET ${right.value}`);
-    codeGen.flatAst.push(`SUB ${codeGen.varibles[left.name]}`);
+    codeGen.flatAst.push(`STORE ${codeGen.varibles['exv']}`);
+    codeGen.flatAst.push(`LOAD ${codeGen.varibles[left.name]}`);
+    codeGen.flatAst.push(`SUB ${codeGen.varibles['exv']}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
@@ -303,9 +305,6 @@ export const divGen = (
   const rd = codeGen.generateUniqueVar();
   const re = codeGen.generateUniqueVar();
 
-  if (right.type === 'VALUE' && right.value === '0') {
-    throw new Error(`Division by zero`);
-  }
   if (!isHalf) {
     codeGen.generateAssign({
       type: 'ASSIGN',
@@ -315,7 +314,6 @@ export const divGen = (
         value: '0',
       },
     });
-
     codeGen.generateIf({
       type: 'IF',
       condition: {
@@ -350,7 +348,7 @@ export const divGen = (
               type: 'IDENTIFIER',
               name: ra,
             },
-            operator: '<=',
+            operator: '<',
           },
           commands: [
             {
@@ -457,11 +455,11 @@ export const divGen = (
                 type: 'EXPRESSION',
                 left: {
                   type: 'IDENTIFIER',
-                  name: rd,
+                  name: rc,
                 },
                 right: {
                   type: 'IDENTIFIER',
-                  name: rc,
+                  name: rd,
                 },
                 operator: '+',
               },
@@ -501,7 +499,6 @@ export const modGen = (
   const rc = codeGen.generateUniqueVar();
   const rd = codeGen.generateUniqueVar();
   const re = codeGen.generateUniqueVar();
-
   codeGen.generateAssign({
     type: 'ASSIGN',
     identifier: ra,
@@ -509,7 +506,7 @@ export const modGen = (
   });
   codeGen.generateAssign({
     type: 'ASSIGN',
-    identifier: 'rd',
+    identifier: rd,
     value: {
       type: 'VALUE',
       value: '0',
@@ -616,7 +613,7 @@ export const modGen = (
     ],
   });
   if (left.type === 'IDENTIFIER') {
-    codeGen.flatAst.push(`LOAD ${left.name}`);
+    codeGen.flatAst.push(`LOAD ${codeGen.varibles[left.name]}`);
   } else {
     codeGen.flatAst.push(`LOAD ${left.value}`);
   }

@@ -2,7 +2,47 @@
   "type": "GLOBALCODE",
   "program": {
     "type": "PROGRAM",
-    "variables": ["x", "y"],
-    "commands": []
+    "variables": [
+      "x"
+    ],
+    "commands": [
+      {
+        "type": "READ",
+        "value": "x"
+      },
+      {
+        "type": "IF",
+        "condition": {
+          "left": {
+            "type": "IDENTIFIER",
+            "name": "x"
+          },
+          "type": "CONDITION",
+          "right": {
+            "type": "VALUE",
+            "value": "0"
+          },
+          "operator": "="
+        },
+        "commands": [
+          {
+            "type": "WRITE",
+            "value": {
+              "type": "VALUE",
+              "value": "1"
+            }
+          }
+        ],
+        "elseCommands": [
+          {
+            "type": "WRITE",
+            "value": {
+              "type": "VALUE",
+              "value": "0"
+            }
+          }
+        ]
+      }
+    ]
   }
 }

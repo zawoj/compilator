@@ -123,7 +123,7 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate().code;
+    const conditionCode = conditions.generate(isArg, procName).code;
 
     this.flatAst.push(`${returnLabel}`);
     conditionCode.forEach((command) => {
@@ -148,7 +148,7 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate().code;
+    const conditionCode = conditions.generate(isArg, procName).code;
 
     conditionCode.forEach((command) => {
       this.flatAst.push(command);
@@ -185,6 +185,9 @@ export class CodeGenerator {
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`STORE ${variableIndex}`);
     } else if (command.value.type === 'IDENTIFIER') {
+      // console.log(command.value.name);
+      console.log(procName);
+      // console.log(isArg);
       const variableIndex1 = this.getVaribleIndex(
         command.value.name,
         isArg,
@@ -288,10 +291,13 @@ export class CodeGenerator {
 
   generateProc(proc: Procedure) {
     this.flatAst.push(`${proc.jumpLabel}`);
-    proc.variables.forEach((name: string) => {
-      this.varibles[proc.head.name + name] = this.variblesIndex.toString();
-      this.variblesIndex++;
-    });
+    if (proc.variables) {
+      proc.variables.forEach((name: string) => {
+        this.varibles[proc.head.name + name] = this.variblesIndex.toString();
+        this.variblesIndex++;
+      });
+    }
+
     proc.commands.forEach((command: any) => {
       this.generateCommand(command, true, proc.head.name);
     });

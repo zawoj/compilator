@@ -1,43 +1,33 @@
-[
-? 0
-? 1
-> 46368
-> 28657
+[ a ^ b mod c
+? 1234567890
+? 1234567890987654321
+? 987654321
+> 674106858
 ]
-
-PROCEDURE pa(a,b) IS
+PROCEDURE power(a,b,c,d) IS
+VAR pot,wyk,o
 BEGIN
-  a:=a+b;
-  b:=a-b;
-END
-
-PROCEDURE pb(a,b) IS
-BEGIN
-  pa(a,b);
-  pa(a,b);
-END
-
-PROCEDURE pc(a,b) IS
-BEGIN
-  pb(a,b);
-  pb(a,b);
-  pb(a,b);
-END
-
-PROCEDURE pd(a,b) IS
-BEGIN
-  pc(a,b);
-  pc(a,b);
-  pc(a,b);
-  pc(a,b);
+    d:=1;
+    wyk:=b;
+    pot:=a%c;
+    WHILE wyk>0 DO
+	o:=wyk%2;
+	IF o=1 THEN
+	    d:=d*pot;
+	    d:=d%c;
+	ENDIF
+	wyk:=wyk/2;
+	pot:=pot*pot;
+	pot:=pot%c;
+    ENDWHILE
 END
 
 PROGRAM IS
-VAR a,b
+VAR a,b,c,d
 BEGIN
-  READ a;
-  READ b;
-  pd(a,b);
-  WRITE a;
-  WRITE b;
+   READ a;
+   READ b;
+   READ c;
+   power(a,b,c,d);
+   WRITE d;
 END

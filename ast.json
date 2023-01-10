@@ -5,33 +5,39 @@
       "type": "PROCEDURE",
       "head": {
         "type": "PROCHEADER",
-        "name": "pa",
+        "name": "power",
         "variables": [
           "a",
-          "b"
+          "b",
+          "c",
+          "d"
         ]
       },
-      "variables": null,
+      "variables": [
+        "pot",
+        "wyk",
+        "o"
+      ],
       "commands": [
         {
           "type": "ASSIGN",
-          "identifier": "a",
+          "identifier": "d",
           "value": {
-            "type": "EXPRESSION",
-            "left": {
-              "type": "IDENTIFIER",
-              "name": "a"
-            },
-            "right": {
-              "type": "IDENTIFIER",
-              "name": "b"
-            },
-            "operator": "+"
+            "type": "VALUE",
+            "value": "1"
           }
         },
         {
           "type": "ASSIGN",
-          "identifier": "b",
+          "identifier": "wyk",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "b"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "pot",
           "value": {
             "type": "EXPRESSION",
             "left": {
@@ -40,137 +46,153 @@
             },
             "right": {
               "type": "IDENTIFIER",
-              "name": "b"
+              "name": "c"
             },
-            "operator": "-"
+            "operator": "%"
           }
+        },
+        {
+          "type": "WHILE",
+          "condition": {
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "wyk"
+            },
+            "type": "CONDITION",
+            "right": {
+              "type": "VALUE",
+              "value": "0"
+            },
+            "operator": ">"
+          },
+          "commands": [
+            {
+              "type": "ASSIGN",
+              "identifier": "o",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "wyk"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "2"
+                },
+                "operator": "%"
+              }
+            },
+            {
+              "type": "IF",
+              "condition": {
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "o"
+                },
+                "type": "CONDITION",
+                "right": {
+                  "type": "VALUE",
+                  "value": "1"
+                },
+                "operator": "="
+              },
+              "commands": [
+                {
+                  "type": "ASSIGN",
+                  "identifier": "d",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "d"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "pot"
+                    },
+                    "operator": "*"
+                  }
+                },
+                {
+                  "type": "ASSIGN",
+                  "identifier": "d",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "d"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "c"
+                    },
+                    "operator": "%"
+                  }
+                }
+              ],
+              "elseCommands": []
+            },
+            {
+              "type": "ASSIGN",
+              "identifier": "wyk",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "wyk"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "2"
+                },
+                "operator": "/"
+              }
+            },
+            {
+              "type": "ASSIGN",
+              "identifier": "pot",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "pot"
+                },
+                "right": {
+                  "type": "IDENTIFIER",
+                  "name": "pot"
+                },
+                "operator": "*"
+              }
+            },
+            {
+              "type": "ASSIGN",
+              "identifier": "pot",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "pot"
+                },
+                "right": {
+                  "type": "IDENTIFIER",
+                  "name": "c"
+                },
+                "operator": "%"
+              }
+            }
+          ]
         }
       ],
       "jumpLabel": "label0"
-    },
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "pb",
-        "variables": [
-          "a",
-          "b"
-        ]
-      },
-      "variables": null,
-      "commands": [
-        {
-          "type": "PROCCALL",
-          "name": "pa",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pa",
-          "variables": [
-            "a",
-            "b"
-          ]
-        }
-      ],
-      "jumpLabel": "label1"
-    },
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "pc",
-        "variables": [
-          "a",
-          "b"
-        ]
-      },
-      "variables": null,
-      "commands": [
-        {
-          "type": "PROCCALL",
-          "name": "pb",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pb",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pb",
-          "variables": [
-            "a",
-            "b"
-          ]
-        }
-      ],
-      "jumpLabel": "label2"
-    },
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "pd",
-        "variables": [
-          "a",
-          "b"
-        ]
-      },
-      "variables": null,
-      "commands": [
-        {
-          "type": "PROCCALL",
-          "name": "pc",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pc",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pc",
-          "variables": [
-            "a",
-            "b"
-          ]
-        },
-        {
-          "type": "PROCCALL",
-          "name": "pc",
-          "variables": [
-            "a",
-            "b"
-          ]
-        }
-      ],
-      "jumpLabel": "label3"
     }
   ],
   "program": {
     "type": "PROGRAM",
     "variables": [
       "a",
-      "b"
+      "b",
+      "c",
+      "d"
     ],
     "commands": [
       {
@@ -182,25 +204,24 @@
         "value": "b"
       },
       {
+        "type": "READ",
+        "value": "c"
+      },
+      {
         "type": "PROCCALL",
-        "name": "pd",
+        "name": "power",
         "variables": [
           "a",
-          "b"
+          "b",
+          "c",
+          "d"
         ]
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "a"
-        }
-      },
-      {
-        "type": "WRITE",
-        "value": {
-          "type": "IDENTIFIER",
-          "name": "b"
+          "name": "d"
         }
       }
     ]

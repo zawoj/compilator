@@ -66,7 +66,7 @@ export const subGen = (
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
     const variableIndex1 = codeGen.getVaribleIndex(left.name, isArg, procName);
     const variableIndex2 = codeGen.getVaribleIndex(right.name, isArg, procName);
-    codeGen.flatAst.push(`STORE ${variableIndex1}`);
+    codeGen.flatAst.push(`LOAD ${variableIndex1}`);
     codeGen.flatAst.push(`SUB ${variableIndex2}`);
   }
 };
@@ -93,49 +93,57 @@ export const mulGen = (
   // x:=a;
   // y:=b;
 
-  codeGen.generateIf({
-    type: 'IF',
-    condition: {
-      left: left,
-      type: 'CONDITION',
-      right: right,
-      operator: '>',
+  codeGen.generateIf(
+    {
+      type: 'IF',
+      condition: {
+        left: left,
+        type: 'CONDITION',
+        right: right,
+        operator: '>',
+      },
+      commands: [
+        {
+          type: 'ASSIGN',
+          identifier: x,
+          value: right,
+        },
+        {
+          type: 'ASSIGN',
+          identifier: y,
+          value: left,
+        },
+      ],
+      elseCommands: [
+        {
+          type: 'ASSIGN',
+          identifier: x,
+          value: left,
+        },
+        {
+          type: 'ASSIGN',
+          identifier: y,
+          value: right,
+        },
+      ],
     },
-    commands: [
-      {
-        type: 'ASSIGN',
-        identifier: x,
-        value: right,
-      },
-      {
-        type: 'ASSIGN',
-        identifier: y,
-        value: left,
-      },
-    ],
-    elseCommands: [
-      {
-        type: 'ASSIGN',
-        identifier: x,
-        value: left,
-      },
-      {
-        type: 'ASSIGN',
-        identifier: y,
-        value: right,
-      },
-    ],
-  });
+    isArg,
+    procName
+  );
 
   // c:=0;
-  codeGen.generateAssign({
-    type: 'ASSIGN',
-    identifier: c,
-    value: {
-      type: 'VALUE',
-      value: '0',
+  codeGen.generateAssign(
+    {
+      type: 'ASSIGN',
+      identifier: c,
+      value: {
+        type: 'VALUE',
+        value: '0',
+      },
     },
-  });
+    isArg,
+    procName
+  );
 
   // WHILE x>0 DO
   // z:=x;
@@ -145,146 +153,150 @@ export const mulGen = (
   // x:=x/2;
   // y:=y+y;
   // ELSE
-  codeGen.generateWhile({
-    type: 'WHILE',
-    condition: {
-      left: {
-        type: 'IDENTIFIER',
-        name: x,
-      },
-      type: 'CONDITION',
-      right: {
-        type: 'VALUE',
-        value: '0',
-      },
-      operator: '>',
-    },
-    commands: [
-      {
-        type: 'ASSIGN',
-        identifier: z,
-        value: {
+  codeGen.generateWhile(
+    {
+      type: 'WHILE',
+      condition: {
+        left: {
           type: 'IDENTIFIER',
           name: x,
         },
-      },
-      {
-        type: 'ASSIGN',
-        identifier: z,
-        value: {
-          type: 'EXPRESSION',
-          left: {
-            type: 'IDENTIFIER',
-            name: z,
-          },
-          right: {
-            type: 'VALUE',
-            value: '2',
-          },
-          operator: '/',
+        type: 'CONDITION',
+        right: {
+          type: 'VALUE',
+          value: '0',
         },
+        operator: '>',
       },
-      {
-        type: 'ASSIGN',
-        identifier: z,
-        value: {
-          type: 'EXPRESSION',
-          left: {
-            type: 'IDENTIFIER',
-            name: z,
-          },
-          right: {
-            type: 'IDENTIFIER',
-            name: z,
-          },
-          operator: '+',
-        },
-      },
-      {
-        type: 'IF',
-        condition: {
-          left: {
-            type: 'IDENTIFIER',
-            name: z,
-          },
-          type: 'CONDITION',
-          right: {
+      commands: [
+        {
+          type: 'ASSIGN',
+          identifier: z,
+          value: {
             type: 'IDENTIFIER',
             name: x,
           },
-          operator: '=',
         },
-        commands: [
-          {
-            type: 'ASSIGN',
-            identifier: x,
-            value: {
-              type: 'EXPRESSION',
-              left: {
-                type: 'IDENTIFIER',
-                name: x,
-              },
-              right: {
-                type: 'VALUE',
-                value: '2',
-              },
-              operator: '/',
+        {
+          type: 'ASSIGN',
+          identifier: z,
+          value: {
+            type: 'EXPRESSION',
+            left: {
+              type: 'IDENTIFIER',
+              name: z,
             },
-          },
-          {
-            type: 'ASSIGN',
-            identifier: y,
-            value: {
-              type: 'EXPRESSION',
-              left: {
-                type: 'IDENTIFIER',
-                name: y,
-              },
-              right: {
-                type: 'IDENTIFIER',
-                name: y,
-              },
-              operator: '+',
+            right: {
+              type: 'VALUE',
+              value: '2',
             },
+            operator: '/',
           },
-        ],
-        elseCommands: [
-          {
-            type: 'ASSIGN',
-            identifier: x,
-            value: {
-              type: 'EXPRESSION',
-              left: {
-                type: 'IDENTIFIER',
-                name: x,
-              },
-              right: {
-                type: 'VALUE',
-                value: '1',
-              },
-              operator: '-',
+        },
+        {
+          type: 'ASSIGN',
+          identifier: z,
+          value: {
+            type: 'EXPRESSION',
+            left: {
+              type: 'IDENTIFIER',
+              name: z,
             },
-          },
-          {
-            type: 'ASSIGN',
-            identifier: c,
-            value: {
-              type: 'EXPRESSION',
-              left: {
-                type: 'IDENTIFIER',
-                name: c,
-              },
-              right: {
-                type: 'IDENTIFIER',
-                name: y,
-              },
-              operator: '+',
+            right: {
+              type: 'IDENTIFIER',
+              name: z,
             },
+            operator: '+',
           },
-        ],
-      },
-    ],
-  });
+        },
+        {
+          type: 'IF',
+          condition: {
+            left: {
+              type: 'IDENTIFIER',
+              name: z,
+            },
+            type: 'CONDITION',
+            right: {
+              type: 'IDENTIFIER',
+              name: x,
+            },
+            operator: '=',
+          },
+          commands: [
+            {
+              type: 'ASSIGN',
+              identifier: x,
+              value: {
+                type: 'EXPRESSION',
+                left: {
+                  type: 'IDENTIFIER',
+                  name: x,
+                },
+                right: {
+                  type: 'VALUE',
+                  value: '2',
+                },
+                operator: '/',
+              },
+            },
+            {
+              type: 'ASSIGN',
+              identifier: y,
+              value: {
+                type: 'EXPRESSION',
+                left: {
+                  type: 'IDENTIFIER',
+                  name: y,
+                },
+                right: {
+                  type: 'IDENTIFIER',
+                  name: y,
+                },
+                operator: '+',
+              },
+            },
+          ],
+          elseCommands: [
+            {
+              type: 'ASSIGN',
+              identifier: x,
+              value: {
+                type: 'EXPRESSION',
+                left: {
+                  type: 'IDENTIFIER',
+                  name: x,
+                },
+                right: {
+                  type: 'VALUE',
+                  value: '1',
+                },
+                operator: '-',
+              },
+            },
+            {
+              type: 'ASSIGN',
+              identifier: c,
+              value: {
+                type: 'EXPRESSION',
+                left: {
+                  type: 'IDENTIFIER',
+                  name: c,
+                },
+                right: {
+                  type: 'IDENTIFIER',
+                  name: y,
+                },
+                operator: '+',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    isArg,
+    procName
+  );
   // Save result in p0
   codeGen.flatAst.push('LOAD ' + codeGen.varibles[c]);
 };
@@ -323,185 +335,193 @@ export const divGen = (
   const re = codeGen.generateUniqueVar();
 
   if (!isHalf) {
-    codeGen.generateAssign({
-      type: 'ASSIGN',
-      identifier: rc,
-      value: {
-        type: 'VALUE',
-        value: '0',
-      },
-    });
-    codeGen.generateIf({
-      type: 'IF',
-      condition: {
-        left: {
+    codeGen.generateAssign(
+      {
+        type: 'ASSIGN',
+        identifier: rc,
+        value: {
           type: 'VALUE',
           value: '0',
         },
-        type: 'CONDITION',
-        right: right,
-        operator: '<',
       },
-      commands: [
-        {
-          type: 'ASSIGN',
-          identifier: rb,
-          value: right,
-        },
-        {
-          type: 'ASSIGN',
-          identifier: ra,
-          value: left,
-        },
-        {
-          type: 'WHILE',
-          condition: {
-            left: {
-              type: 'IDENTIFIER',
-              name: rb,
-            },
-            type: 'CONDITION',
-            right: {
-              type: 'IDENTIFIER',
-              name: ra,
-            },
-            operator: '<',
+      isArg,
+      procName
+    );
+    codeGen.generateIf(
+      {
+        type: 'IF',
+        condition: {
+          left: {
+            type: 'VALUE',
+            value: '0',
           },
-          commands: [
-            {
-              type: 'ASSIGN',
-              identifier: rd,
-              value: {
-                type: 'VALUE',
-                value: '1',
-              },
-            },
-            {
-              type: 'ASSIGN',
-              identifier: re,
-              value: {
+          type: 'CONDITION',
+          right: right,
+          operator: '<',
+        },
+        commands: [
+          {
+            type: 'ASSIGN',
+            identifier: rb,
+            value: right,
+          },
+          {
+            type: 'ASSIGN',
+            identifier: ra,
+            value: left,
+          },
+          {
+            type: 'WHILE',
+            condition: {
+              left: {
                 type: 'IDENTIFIER',
                 name: rb,
               },
-            },
-            {
-              type: 'WHILE',
-              condition: {
-                left: {
-                  type: 'IDENTIFIER',
-                  name: re,
-                },
-                type: 'CONDITION',
-                right: {
-                  type: 'IDENTIFIER',
-                  name: ra,
-                },
-                operator: '<=',
+              type: 'CONDITION',
+              right: {
+                type: 'IDENTIFIER',
+                name: ra,
               },
-              commands: [
-                {
-                  type: 'ASSIGN',
-                  identifier: re,
-                  value: {
-                    type: 'EXPRESSION',
-                    left: {
-                      type: 'IDENTIFIER',
-                      name: re,
-                    },
-                    right: {
-                      type: 'IDENTIFIER',
-                      name: re,
-                    },
-                    operator: '+',
-                  },
-                },
-                {
-                  type: 'ASSIGN',
-                  identifier: rd,
-                  value: {
-                    type: 'EXPRESSION',
-                    left: {
-                      type: 'IDENTIFIER',
-                      name: rd,
-                    },
-                    right: {
-                      type: 'IDENTIFIER',
-                      name: rd,
-                    },
-                    operator: '+',
-                  },
-                },
-              ],
+              operator: '<',
             },
-            {
-              type: 'ASSIGN',
-              identifier: rd,
-              value: {
-                type: 'EXPRESSION',
-                left: {
-                  type: 'IDENTIFIER',
-                  name: rd,
-                },
-                right: {
+            commands: [
+              {
+                type: 'ASSIGN',
+                identifier: rd,
+                value: {
                   type: 'VALUE',
-                  value: '2',
+                  value: '1',
                 },
-                operator: '/',
               },
-            },
-            {
-              type: 'ASSIGN',
-              identifier: re,
-              value: {
-                type: 'EXPRESSION',
-                left: {
+              {
+                type: 'ASSIGN',
+                identifier: re,
+                value: {
                   type: 'IDENTIFIER',
-                  name: re,
+                  name: rb,
                 },
-                right: {
-                  type: 'VALUE',
-                  value: '2',
-                },
-                operator: '/',
               },
-            },
-            {
-              type: 'ASSIGN',
-              identifier: rc,
-              value: {
-                type: 'EXPRESSION',
-                left: {
-                  type: 'IDENTIFIER',
-                  name: rc,
+              {
+                type: 'WHILE',
+                condition: {
+                  left: {
+                    type: 'IDENTIFIER',
+                    name: re,
+                  },
+                  type: 'CONDITION',
+                  right: {
+                    type: 'IDENTIFIER',
+                    name: ra,
+                  },
+                  operator: '<=',
                 },
-                right: {
-                  type: 'IDENTIFIER',
-                  name: rd,
-                },
-                operator: '+',
+                commands: [
+                  {
+                    type: 'ASSIGN',
+                    identifier: re,
+                    value: {
+                      type: 'EXPRESSION',
+                      left: {
+                        type: 'IDENTIFIER',
+                        name: re,
+                      },
+                      right: {
+                        type: 'IDENTIFIER',
+                        name: re,
+                      },
+                      operator: '+',
+                    },
+                  },
+                  {
+                    type: 'ASSIGN',
+                    identifier: rd,
+                    value: {
+                      type: 'EXPRESSION',
+                      left: {
+                        type: 'IDENTIFIER',
+                        name: rd,
+                      },
+                      right: {
+                        type: 'IDENTIFIER',
+                        name: rd,
+                      },
+                      operator: '+',
+                    },
+                  },
+                ],
               },
-            },
-            {
-              type: 'ASSIGN',
-              identifier: ra,
-              value: {
-                type: 'EXPRESSION',
-                left: {
-                  type: 'IDENTIFIER',
-                  name: ra,
+              {
+                type: 'ASSIGN',
+                identifier: rd,
+                value: {
+                  type: 'EXPRESSION',
+                  left: {
+                    type: 'IDENTIFIER',
+                    name: rd,
+                  },
+                  right: {
+                    type: 'VALUE',
+                    value: '2',
+                  },
+                  operator: '/',
                 },
-                right: {
-                  type: 'IDENTIFIER',
-                  name: re,
-                },
-                operator: '-',
               },
-            },
-          ],
-        },
-      ],
-      elseCommands: [],
-    });
+              {
+                type: 'ASSIGN',
+                identifier: re,
+                value: {
+                  type: 'EXPRESSION',
+                  left: {
+                    type: 'IDENTIFIER',
+                    name: re,
+                  },
+                  right: {
+                    type: 'VALUE',
+                    value: '2',
+                  },
+                  operator: '/',
+                },
+              },
+              {
+                type: 'ASSIGN',
+                identifier: rc,
+                value: {
+                  type: 'EXPRESSION',
+                  left: {
+                    type: 'IDENTIFIER',
+                    name: rc,
+                  },
+                  right: {
+                    type: 'IDENTIFIER',
+                    name: rd,
+                  },
+                  operator: '+',
+                },
+              },
+              {
+                type: 'ASSIGN',
+                identifier: ra,
+                value: {
+                  type: 'EXPRESSION',
+                  left: {
+                    type: 'IDENTIFIER',
+                    name: ra,
+                  },
+                  right: {
+                    type: 'IDENTIFIER',
+                    name: re,
+                  },
+                  operator: '-',
+                },
+              },
+            ],
+          },
+        ],
+        elseCommands: [],
+      },
+      isArg,
+      procName
+    );
     codeGen.flatAst.push(`LOAD ${codeGen.varibles[rc]}`);
   }
 };
@@ -518,124 +538,136 @@ export const modGen = (
   const rc = codeGen.generateUniqueVar();
   const rd = codeGen.generateUniqueVar();
   const re = codeGen.generateUniqueVar();
-  codeGen.generateAssign({
-    type: 'ASSIGN',
-    identifier: ra,
-    value: left,
-  });
-  codeGen.generateAssign({
-    type: 'ASSIGN',
-    identifier: rd,
-    value: {
-      type: 'VALUE',
-      value: '0',
+  codeGen.generateAssign(
+    {
+      type: 'ASSIGN',
+      identifier: ra,
+      value: left,
     },
-  });
-  codeGen.generateWhile({
-    type: 'WHILE',
-    condition: {
-      left: right,
-      type: 'CONDITION',
-      right: {
-        type: 'IDENTIFIER',
-        name: ra,
+    isArg,
+    procName
+  );
+  codeGen.generateAssign(
+    {
+      type: 'ASSIGN',
+      identifier: rd,
+      value: {
+        type: 'VALUE',
+        value: '0',
       },
-      operator: '<=',
     },
-    commands: [
-      {
-        type: 'ASSIGN',
-        identifier: rc,
-        value: right,
-      },
-      {
-        type: 'WHILE',
-        condition: {
-          left: {
-            type: 'IDENTIFIER',
-            name: rc,
-          },
-          type: 'CONDITION',
-          right: {
-            type: 'IDENTIFIER',
-            name: ra,
-          },
-          operator: '<=',
+    isArg,
+    procName
+  );
+  codeGen.generateWhile(
+    {
+      type: 'WHILE',
+      condition: {
+        left: right,
+        type: 'CONDITION',
+        right: {
+          type: 'IDENTIFIER',
+          name: ra,
         },
-        commands: [
-          {
-            type: 'ASSIGN',
-            identifier: rc,
-            value: {
-              type: 'EXPRESSION',
-              left: {
-                type: 'IDENTIFIER',
-                name: rc,
-              },
-              right: {
-                type: 'IDENTIFIER',
-                name: rc,
-              },
-              operator: '+',
+        operator: '<=',
+      },
+      commands: [
+        {
+          type: 'ASSIGN',
+          identifier: rc,
+          value: right,
+        },
+        {
+          type: 'WHILE',
+          condition: {
+            left: {
+              type: 'IDENTIFIER',
+              name: rc,
             },
+            type: 'CONDITION',
+            right: {
+              type: 'IDENTIFIER',
+              name: ra,
+            },
+            operator: '<=',
           },
-        ],
-      },
-      {
-        type: 'ASSIGN',
-        identifier: rc,
-        value: {
-          type: 'EXPRESSION',
-          left: {
-            type: 'IDENTIFIER',
-            name: rc,
-          },
-          right: {
-            type: 'VALUE',
-            value: '2',
-          },
-          operator: '/',
+          commands: [
+            {
+              type: 'ASSIGN',
+              identifier: rc,
+              value: {
+                type: 'EXPRESSION',
+                left: {
+                  type: 'IDENTIFIER',
+                  name: rc,
+                },
+                right: {
+                  type: 'IDENTIFIER',
+                  name: rc,
+                },
+                operator: '+',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: 'ASSIGN',
-        identifier: ra,
-        value: {
-          type: 'EXPRESSION',
-          left: {
-            type: 'IDENTIFIER',
-            name: ra,
+        {
+          type: 'ASSIGN',
+          identifier: rc,
+          value: {
+            type: 'EXPRESSION',
+            left: {
+              type: 'IDENTIFIER',
+              name: rc,
+            },
+            right: {
+              type: 'VALUE',
+              value: '2',
+            },
+            operator: '/',
           },
-          right: {
-            type: 'IDENTIFIER',
-            name: rc,
-          },
-          operator: '-',
         },
-      },
-      {
-        type: 'ASSIGN',
-        identifier: rd,
-        value: {
-          type: 'EXPRESSION',
-          left: {
-            type: 'IDENTIFIER',
-            name: rd,
+        {
+          type: 'ASSIGN',
+          identifier: ra,
+          value: {
+            type: 'EXPRESSION',
+            left: {
+              type: 'IDENTIFIER',
+              name: ra,
+            },
+            right: {
+              type: 'IDENTIFIER',
+              name: rc,
+            },
+            operator: '-',
           },
-          right: {
-            type: 'IDENTIFIER',
-            name: rc,
-          },
-          operator: '+',
         },
-      },
-    ],
-  });
+        {
+          type: 'ASSIGN',
+          identifier: rd,
+          value: {
+            type: 'EXPRESSION',
+            left: {
+              type: 'IDENTIFIER',
+              name: rd,
+            },
+            right: {
+              type: 'IDENTIFIER',
+              name: rc,
+            },
+            operator: '+',
+          },
+        },
+      ],
+    },
+    isArg,
+    procName
+  );
   if (left.type === 'IDENTIFIER') {
     const variableIndex = codeGen.getVaribleIndex(left.name, isArg, procName);
     codeGen.flatAst.push(`LOAD ${variableIndex}`);
   } else {
-    codeGen.flatAst.push(`LOAD ${left.value}`);
+    codeGen.flatAst.push(`SET ${left.value}`);
   }
   codeGen.flatAst.push(`SUB ${codeGen.varibles[rd]}`);
 };

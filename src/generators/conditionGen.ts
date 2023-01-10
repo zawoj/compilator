@@ -336,7 +336,7 @@ export class ConditionGenerator {
       // console.log(variableIndex1);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1} <--`);
+      this.code.push(`LOAD ${variableIndex1}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);

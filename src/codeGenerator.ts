@@ -81,7 +81,6 @@ export class CodeGenerator {
     this.ast.program.commands.forEach((command) => {
       this.generateCommand(command);
     });
-    console.log(this.varibles);
   }
 
   generateCommand(command: commands, isArg?: boolean, procName?: string) {
@@ -176,14 +175,28 @@ export class CodeGenerator {
   generateAssign(command: Assign, isArg?: boolean, procName?: string) {
     // Generate asm code for ASSIGN command and get the varible from the varibles map
     // Check if the value is a number or a variable
-    const STORE = isArg ? 'STORE' : 'STORE';
-    const LOAD = isArg ? 'LOAD' : 'LOAD';
+
     if (command.value.type === 'VALUE') {
+      const variableIndex = this.getVaribleIndex(
+        command.identifier,
+        isArg,
+        procName
+      );
       this.flatAst.push(`SET ${command.value.value}`);
-      this.flatAst.push(`${STORE} ${this.varibles[command.identifier]}`);
+      this.flatAst.push(`STORE ${variableIndex}`);
     } else if (command.value.type === 'IDENTIFIER') {
-      this.flatAst.push(`${LOAD} ${this.varibles[command.value.name]}`);
-      this.flatAst.push(`${STORE} ${this.varibles[command.identifier]}`);
+      const variableIndex1 = this.getVaribleIndex(
+        command.value.name,
+        isArg,
+        procName
+      );
+      const variableIndex2 = this.getVaribleIndex(
+        command.identifier,
+        isArg,
+        procName
+      );
+      this.flatAst.push(`LOAD ${variableIndex1}`);
+      this.flatAst.push(`STORE ${variableIndex2}`);
     } else {
       this.generateExpression(command.value, isArg, procName);
       const variableIndex = this.getVaribleIndex(
@@ -191,14 +204,15 @@ export class CodeGenerator {
         isArg,
         procName
       );
-      this.flatAst.push(`${STORE} ${variableIndex}`);
+      this.flatAst.push(`STORE ${variableIndex}`);
     }
   }
 
   generateRead(command: Read, isArg?: boolean, procName?: string) {
     // Generate asm code for READ command and get the varible from the varibles map
     // Read the value and habe to save in register
-    this.flatAst.push(`GET ${this.varibles[command.value]}`);
+    const variableIndex = this.getVaribleIndex(command.value, isArg, procName);
+    this.flatAst.push(`GET ${variableIndex}`);
   }
 
   generateWrite(command: Write, isArg?: boolean, procName?: string) {
@@ -227,7 +241,7 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate().code;
+    const conditionCode = conditions.generate(isArg, procName).code;
 
     this.flatAst.push(`${falseLabel}`);
     command.commands.forEach((command: any) => {

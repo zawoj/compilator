@@ -1,33 +1,35 @@
-[ a ^ b mod c
-? 1234567890
-? 1234567890987654321
-? 987654321
-> 674106858
-]
-PROCEDURE power(a,b,c,d) IS
-VAR pot,wyk,o
+PROCEDURE swap(a,b) IS
+VAR c
 BEGIN
-    d:=1;
-    wyk:=b;
-    pot:=a%c;
-    WHILE wyk>0 DO
-	o:=wyk%2;
-	IF o=1 THEN
-	    d:=d*pot;
-	    d:=d%c;
-	ENDIF
-	wyk:=wyk/2;
-	pot:=pot*pot;
-	pot:=pot%c;
-    ENDWHILE
+  c:=a;
+  a:=b;
+  b:=c;
+END
+
+PROCEDURE gcd(a,b,c) IS
+VAR x,y
+BEGIN
+  x:=a;
+  y:=b;
+  WHILE y!=0 DO
+    IF x>=y THEN 
+      x:=x-y;
+    ELSE 
+      swap(x,y);
+    ENDIF
+  ENDWHILE
+  c:=x;
 END
 
 PROGRAM IS
-VAR a,b,c,d
+VAR a,b,c,d,x,y,z
 BEGIN
-   READ a;
-   READ b;
-   READ c;
-   power(a,b,c,d);
-   WRITE d;
+  READ a;
+  READ b;
+  READ c;
+  READ d;
+  gcd(a,b,x);
+  gcd(c,d,y);
+  gcd(x,y,z);
+  WRITE z;
 END

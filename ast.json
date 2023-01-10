@@ -5,31 +5,27 @@
       "type": "PROCEDURE",
       "head": {
         "type": "PROCHEADER",
-        "name": "power",
+        "name": "swap",
         "variables": [
           "a",
-          "b",
-          "c",
-          "d"
+          "b"
         ]
       },
       "variables": [
-        "pot",
-        "wyk",
-        "o"
+        "c"
       ],
       "commands": [
         {
           "type": "ASSIGN",
-          "identifier": "d",
+          "identifier": "c",
           "value": {
-            "type": "VALUE",
-            "value": "1"
+            "type": "IDENTIFIER",
+            "name": "a"
           }
         },
         {
           "type": "ASSIGN",
-          "identifier": "wyk",
+          "identifier": "a",
           "value": {
             "type": "IDENTIFIER",
             "name": "b"
@@ -37,18 +33,45 @@
         },
         {
           "type": "ASSIGN",
-          "identifier": "pot",
+          "identifier": "b",
           "value": {
-            "type": "EXPRESSION",
-            "left": {
-              "type": "IDENTIFIER",
-              "name": "a"
-            },
-            "right": {
-              "type": "IDENTIFIER",
-              "name": "c"
-            },
-            "operator": "%"
+            "type": "IDENTIFIER",
+            "name": "c"
+          }
+        }
+      ],
+      "jumpLabel": "label0"
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "gcd",
+        "variables": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "variables": [
+        "x",
+        "y"
+      ],
+      "commands": [
+        {
+          "type": "ASSIGN",
+          "identifier": "x",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "a"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "y",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "b"
           }
         },
         {
@@ -56,134 +79,71 @@
           "condition": {
             "left": {
               "type": "IDENTIFIER",
-              "name": "wyk"
+              "name": "y"
             },
             "type": "CONDITION",
             "right": {
               "type": "VALUE",
               "value": "0"
             },
-            "operator": ">"
+            "operator": "!="
           },
           "commands": [
-            {
-              "type": "ASSIGN",
-              "identifier": "o",
-              "value": {
-                "type": "EXPRESSION",
-                "left": {
-                  "type": "IDENTIFIER",
-                  "name": "wyk"
-                },
-                "right": {
-                  "type": "VALUE",
-                  "value": "2"
-                },
-                "operator": "%"
-              }
-            },
             {
               "type": "IF",
               "condition": {
                 "left": {
                   "type": "IDENTIFIER",
-                  "name": "o"
+                  "name": "x"
                 },
                 "type": "CONDITION",
                 "right": {
-                  "type": "VALUE",
-                  "value": "1"
+                  "type": "IDENTIFIER",
+                  "name": "y"
                 },
-                "operator": "="
+                "operator": ">="
               },
               "commands": [
                 {
                   "type": "ASSIGN",
-                  "identifier": "d",
+                  "identifier": "x",
                   "value": {
                     "type": "EXPRESSION",
                     "left": {
                       "type": "IDENTIFIER",
-                      "name": "d"
+                      "name": "x"
                     },
                     "right": {
                       "type": "IDENTIFIER",
-                      "name": "pot"
+                      "name": "y"
                     },
-                    "operator": "*"
-                  }
-                },
-                {
-                  "type": "ASSIGN",
-                  "identifier": "d",
-                  "value": {
-                    "type": "EXPRESSION",
-                    "left": {
-                      "type": "IDENTIFIER",
-                      "name": "d"
-                    },
-                    "right": {
-                      "type": "IDENTIFIER",
-                      "name": "c"
-                    },
-                    "operator": "%"
+                    "operator": "-"
                   }
                 }
               ],
-              "elseCommands": []
-            },
-            {
-              "type": "ASSIGN",
-              "identifier": "wyk",
-              "value": {
-                "type": "EXPRESSION",
-                "left": {
-                  "type": "IDENTIFIER",
-                  "name": "wyk"
-                },
-                "right": {
-                  "type": "VALUE",
-                  "value": "2"
-                },
-                "operator": "/"
-              }
-            },
-            {
-              "type": "ASSIGN",
-              "identifier": "pot",
-              "value": {
-                "type": "EXPRESSION",
-                "left": {
-                  "type": "IDENTIFIER",
-                  "name": "pot"
-                },
-                "right": {
-                  "type": "IDENTIFIER",
-                  "name": "pot"
-                },
-                "operator": "*"
-              }
-            },
-            {
-              "type": "ASSIGN",
-              "identifier": "pot",
-              "value": {
-                "type": "EXPRESSION",
-                "left": {
-                  "type": "IDENTIFIER",
-                  "name": "pot"
-                },
-                "right": {
-                  "type": "IDENTIFIER",
-                  "name": "c"
-                },
-                "operator": "%"
-              }
+              "elseCommands": [
+                {
+                  "type": "PROCCALL",
+                  "name": "swap",
+                  "variables": [
+                    "x",
+                    "y"
+                  ]
+                }
+              ]
             }
           ]
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "c",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "x"
+          }
         }
       ],
-      "jumpLabel": "label0"
+      "jumpLabel": "label1"
     }
   ],
   "program": {
@@ -192,7 +152,10 @@
       "a",
       "b",
       "c",
-      "d"
+      "d",
+      "x",
+      "y",
+      "z"
     ],
     "commands": [
       {
@@ -208,20 +171,41 @@
         "value": "c"
       },
       {
+        "type": "READ",
+        "value": "d"
+      },
+      {
         "type": "PROCCALL",
-        "name": "power",
+        "name": "gcd",
         "variables": [
           "a",
           "b",
+          "x"
+        ]
+      },
+      {
+        "type": "PROCCALL",
+        "name": "gcd",
+        "variables": [
           "c",
-          "d"
+          "d",
+          "y"
+        ]
+      },
+      {
+        "type": "PROCCALL",
+        "name": "gcd",
+        "variables": [
+          "x",
+          "y",
+          "z"
         ]
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "d"
+          "name": "z"
         }
       }
     ]

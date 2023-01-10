@@ -30,7 +30,8 @@ export type commands =
   | Write
   | Repeat
   | Expression
-  | Identifier;
+  | Identifier
+  | ProcCall;
 
 export type While = {
   type: 'WHILE';

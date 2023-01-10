@@ -1,53 +1,5 @@
 {
   "type": "GLOBALCODE",
-  "procedures": [
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "check",
-        "variables": [
-          "n"
-        ]
-      },
-      "variables": [
-        "r"
-      ],
-      "commands": [
-        {
-          "type": "WRITE",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "n"
-          }
-        }
-      ],
-      "jumpLabel": "label0"
-    },
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "checkv",
-        "variables": [
-          "n"
-        ]
-      },
-      "variables": [
-        "r"
-      ],
-      "commands": [
-        {
-          "type": "WRITE",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "n"
-          }
-        }
-      ],
-      "jumpLabel": "label1"
-    }
-  ],
   "program": {
     "type": "PROGRAM",
     "variables": [
@@ -59,18 +11,11 @@
         "value": "n"
       },
       {
-        "type": "PROCCALL",
-        "name": "check",
-        "variables": [
-          "n"
-        ]
-      },
-      {
-        "type": "PROCCALL",
-        "name": "checkv",
-        "variables": [
-          "n"
-        ]
+        "type": "WRITE",
+        "value": {
+          "type": "IDENTIFIER",
+          "name": "n"
+        }
       }
     ]
   }

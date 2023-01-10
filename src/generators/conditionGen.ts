@@ -20,27 +20,29 @@ export class ConditionGenerator {
     this.conditon = conditon;
   }
 
-  generate(): {
+  generate(
+    isArg?: boolean
+  ): {
     code: string[];
   } {
     switch (this.conditon.operator) {
       case '=':
-        this.equal();
+        this.equal(isArg);
         break;
       case '!=':
-        this.notEqual();
+        this.notEqual(isArg);
         break;
       case '>':
-        this.greaterThan();
+        this.greaterThan(isArg);
         break;
       case '<':
-        this.lessThan();
+        this.lessThan(isArg);
         break;
       case '>=':
-        this.greaterThanOrEqual();
+        this.greaterThanOrEqual(isArg);
         break;
       case '<=':
-        this.lessThanOrEqual();
+        this.lessThanOrEqual(isArg);
         break;
       default:
         break;
@@ -50,7 +52,7 @@ export class ConditionGenerator {
       code: this.code,
     };
   }
-  equal() {
+  equal( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -118,7 +120,7 @@ export class ConditionGenerator {
     }
   }
 
-  notEqual() {
+  notEqual( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -186,7 +188,7 @@ export class ConditionGenerator {
     }
   }
 
-  lessThan() {
+  lessThan( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -229,7 +231,7 @@ export class ConditionGenerator {
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  greaterThan() {
+  greaterThan( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -272,7 +274,7 @@ export class ConditionGenerator {
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  greaterThanOrEqual() {
+  greaterThanOrEqual( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -315,7 +317,7 @@ export class ConditionGenerator {
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  lessThanOrEqual() {
+  lessThanOrEqual( isArg?: boolean) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'

@@ -4,35 +4,44 @@ import { Identifier, Value } from '../types/astType';
 export const addGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
-  right: Identifier | Value
+  right: Identifier | Value,
+  isArg?: boolean,
+  procName?: string
 ) => {
+  const STORE = isArg ? 'STORE' : 'STORE';
+  const LOAD = isArg ? 'LOAD' : 'LOAD';
+  const ADD = isArg ? 'ADD' : 'ADD';
+  const prefix = isArg ? procName : '';
+
   if (left.type === 'VALUE' && right.type === 'VALUE') {
     codeGen.flatAst.push(`SET ${left.value}`); // p0 = 2
-    codeGen.flatAst.push(`STORE ${codeGen.varibles['exv']}`); // p0 = p[exv]   // 2
+    codeGen.flatAst.push(`${STORE} ${codeGen.varibles['exv']}`); // p0 = p[exv]   // 2
     codeGen.flatAst.push(`SET ${right.value}`); // p0 = 3
-    codeGen.flatAst.push(`ADD ${codeGen.varibles['exv']}`); // p0 = p0 + p[exv]  // 5
+    codeGen.flatAst.push(`${ADD} ${codeGen.varibles['exv']}`); // p0 = p0 + p[exv]  // 5
   }
 
   if (left.type === 'VALUE' && right.type === 'IDENTIFIER') {
     codeGen.flatAst.push(`SET ${left.value}`);
-    codeGen.flatAst.push(`ADD ${codeGen.varibles[right.name]}`);
+    codeGen.flatAst.push(`${ADD} ${codeGen.varibles[right.name]}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
     codeGen.flatAst.push(`SET ${right.value}`);
-    codeGen.flatAst.push(`ADD ${codeGen.varibles[left.name]}`);
+    codeGen.flatAst.push(`${ADD} ${codeGen.varibles[left.name]}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
-    codeGen.flatAst.push(`LOAD ${codeGen.varibles[left.name]}`);
-    codeGen.flatAst.push(`ADD ${codeGen.varibles[right.name]}`);
+    codeGen.flatAst.push(`${LOAD} ${codeGen.varibles[left.name]}`);
+    codeGen.flatAst.push(`${ADD} ${codeGen.varibles[right.name]}`);
   }
 };
 
 export const subGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
-  right: Identifier | Value
+  right: Identifier | Value,
+  isArg?: boolean,
+  procName?: string
 ) => {
   if (left.type === 'VALUE' && right.type === 'VALUE') {
     codeGen.flatAst.push(`SET ${right.value}`);
@@ -63,7 +72,9 @@ export const subGen = (
 export const mulGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
-  right: Identifier | Value
+  right: Identifier | Value,
+  isArg?: boolean,
+  procName?: string
 ) => {
   // VAR x, y, z c
   // Generate unique vars on each function call
@@ -278,7 +289,9 @@ export const mulGen = (
 export const divGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
-  right: Identifier | Value
+  right: Identifier | Value,
+  isArg?: boolean,
+  procName?: string
 ) => {
   let isHalf: boolean = false;
   if (
@@ -492,7 +505,9 @@ export const divGen = (
 export const modGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
-  right: Identifier | Value
+  right: Identifier | Value,
+  isArg?: boolean,
+  procName?: string
 ) => {
   const ra = codeGen.generateUniqueVar();
   const rb = codeGen.generateUniqueVar();

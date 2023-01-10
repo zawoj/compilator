@@ -1,19 +1,6 @@
-PROCEDURE check(n) IS
-VAR r
-BEGIN
-    WRITE n;
-END
-
-PROCEDURE checkv(n) IS
-VAR r
-BEGIN
-    WRITE n;
-END
-
 PROGRAM IS
 VAR n
 BEGIN
    READ n;
-   check(n);
-   checkv(n);
+   WRITE n;
 END

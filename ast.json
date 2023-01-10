@@ -1,211 +1,33 @@
 {
   "type": "GLOBALCODE",
-  "procedures": [
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "swap",
-        "variables": [
-          "a",
-          "b"
-        ]
-      },
-      "variables": [
-        "c"
-      ],
-      "commands": [
-        {
-          "type": "ASSIGN",
-          "identifier": "c",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "a"
-          }
-        },
-        {
-          "type": "ASSIGN",
-          "identifier": "a",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "b"
-          }
-        },
-        {
-          "type": "ASSIGN",
-          "identifier": "b",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "c"
-          }
-        }
-      ],
-      "jumpLabel": "label0"
-    },
-    {
-      "type": "PROCEDURE",
-      "head": {
-        "type": "PROCHEADER",
-        "name": "gcd",
-        "variables": [
-          "a",
-          "b",
-          "c"
-        ]
-      },
-      "variables": [
-        "x",
-        "y"
-      ],
-      "commands": [
-        {
-          "type": "ASSIGN",
-          "identifier": "x",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "a"
-          }
-        },
-        {
-          "type": "ASSIGN",
-          "identifier": "y",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "b"
-          }
-        },
-        {
-          "type": "WHILE",
-          "condition": {
-            "left": {
-              "type": "IDENTIFIER",
-              "name": "y"
-            },
-            "type": "CONDITION",
-            "right": {
-              "type": "VALUE",
-              "value": "0"
-            },
-            "operator": "!="
-          },
-          "commands": [
-            {
-              "type": "IF",
-              "condition": {
-                "left": {
-                  "type": "IDENTIFIER",
-                  "name": "x"
-                },
-                "type": "CONDITION",
-                "right": {
-                  "type": "IDENTIFIER",
-                  "name": "y"
-                },
-                "operator": ">="
-              },
-              "commands": [
-                {
-                  "type": "ASSIGN",
-                  "identifier": "x",
-                  "value": {
-                    "type": "EXPRESSION",
-                    "left": {
-                      "type": "IDENTIFIER",
-                      "name": "x"
-                    },
-                    "right": {
-                      "type": "IDENTIFIER",
-                      "name": "y"
-                    },
-                    "operator": "-"
-                  }
-                }
-              ],
-              "elseCommands": [
-                {
-                  "type": "PROCCALL",
-                  "name": "swap",
-                  "variables": [
-                    "x",
-                    "y"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "ASSIGN",
-          "identifier": "c",
-          "value": {
-            "type": "IDENTIFIER",
-            "name": "x"
-          }
-        }
-      ],
-      "jumpLabel": "label1"
-    }
-  ],
   "program": {
     "type": "PROGRAM",
     "variables": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "x",
-      "y",
-      "z"
+      "n",
+      "m"
     ],
     "commands": [
       {
-        "type": "READ",
-        "value": "a"
-      },
-      {
-        "type": "READ",
-        "value": "b"
-      },
-      {
-        "type": "READ",
-        "value": "c"
-      },
-      {
-        "type": "READ",
-        "value": "d"
-      },
-      {
-        "type": "PROCCALL",
-        "name": "gcd",
-        "variables": [
-          "a",
-          "b",
-          "x"
-        ]
-      },
-      {
-        "type": "PROCCALL",
-        "name": "gcd",
-        "variables": [
-          "c",
-          "d",
-          "y"
-        ]
-      },
-      {
-        "type": "PROCCALL",
-        "name": "gcd",
-        "variables": [
-          "x",
-          "y",
-          "z"
-        ]
+        "type": "ASSIGN",
+        "identifier": "n",
+        "value": {
+          "type": "EXPRESSION",
+          "left": {
+            "type": "VALUE",
+            "value": "10"
+          },
+          "right": {
+            "type": "VALUE",
+            "value": "10"
+          },
+          "operator": "/"
+        }
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "z"
+          "name": "n"
         }
       }
     ]

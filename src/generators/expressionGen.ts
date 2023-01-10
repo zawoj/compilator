@@ -309,6 +309,7 @@ export const divGen = (
   procName?: string
 ) => {
   let isHalf: boolean = false;
+  let isSame: boolean = false;
   if (
     right.type === 'VALUE' &&
     right.value === '2' &&
@@ -334,7 +335,16 @@ export const divGen = (
   const rd = codeGen.generateUniqueVar();
   const re = codeGen.generateUniqueVar();
 
-  if (!isHalf) {
+  // if(right.type === 'VALUE' &&
+  //   left.type === 'VALUE' && !isHalf){
+  //     if(right.value === left.value){
+  //     codeGen.flatAst.push(`SET 1`);
+  //     codeGen.flatAst.push(`STORE ${codeGen.varibles[rc]}`);
+  //     isSame = true;
+  //     } 
+  // }
+
+  if (!isHalf && !isSame) {
     codeGen.generateAssign(
       {
         type: 'ASSIGN',
@@ -382,7 +392,7 @@ export const divGen = (
                 type: 'IDENTIFIER',
                 name: ra,
               },
-              operator: '<',
+              operator: '<=',
             },
             commands: [
               {
@@ -447,7 +457,7 @@ export const divGen = (
                       },
                       operator: '+',
                     },
-                  },
+                  }
                 ],
               },
               {

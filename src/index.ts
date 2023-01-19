@@ -29,13 +29,14 @@ const source = fs.readFileSync('ex3.imp', 'utf8');
 const ast = parser.parse(source);
 
 const astValidation = new AstValidation(ast);
-// console.log(astValidation.errors);
+
+astValidation.runValidation();
 
 const codeGenerator = new CodeGenerator(ast);
-codeGenerator.generateCode();
-codeGenerator.endProgram();
-codeGenerator.astLabelCleaner();
+// codeGenerator.generateCode();
+// codeGenerator.endProgram();
+// codeGenerator.astLabelCleaner();
 fs.writeFileSync('ast.json', JSON.stringify(ast, null, 2));
-fs.writeFileSync('result.asm', codeGenerator.getFlatAst().join('\r\n'));
+// fs.writeFileSync('result.asm', codeGenerator.getFlatAst().join('\r\n'));
 
 module.exports = parser;

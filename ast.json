@@ -26,22 +26,6 @@
         },
         {
           "type": "ASSIGN",
-          "identifier": "d",
-          "value": {
-            "type": "EXPRESSION",
-            "left": {
-              "type": "IDENTIFIER",
-              "name": "b"
-            },
-            "right": {
-              "type": "IDENTIFIER",
-              "name": "c"
-            },
-            "operator": "+"
-          }
-        },
-        {
-          "type": "ASSIGN",
           "identifier": "a",
           "value": {
             "type": "EXPRESSION",
@@ -72,7 +56,7 @@
       },
       {
         "type": "PROCCALL",
-        "name": "pb",
+        "name": "pa",
         "variables": [
           "a",
           "b"

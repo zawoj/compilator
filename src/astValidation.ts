@@ -11,7 +11,7 @@ export default class AstValidation {
   runValidation() {
     this.nameConflictCheck();
     this.checkUseNotDeclared();
-
+    this.checkIfVarWasInitialized();
     this.checkIfProcedureIsDefined();
     this.printErrors();
   }
@@ -107,6 +107,68 @@ export default class AstValidation {
         this._errors.push(`Error: Procedure ${procCall.name} is not defined`);
       }
     });
+  }
+
+  checkIfVarWasInitialized() {
+    const programWrasWithValue = this.varInitializedCheckerHelper(
+      this.ast.program.commands
+    );
+    this.ast.procedures.forEach((proc) => {
+      this.varInitializedCheckerHelper(proc.commands);
+    });
+  }
+
+  varInitializedCheckerHelper(cmd: commands[]) {
+    let programVarsWithValue: string[] = [];
+    // Just assing and read commands can initialize a variable
+    cmd.forEach((cmd) => {
+      console.log(cmd.type);
+      switch (cmd.type) {
+        case 'ASSIGN':
+          programVarsWithValue.push(cmd.identifier);
+          if (
+            cmd.value.type === 'IDENTIFIER' &&
+            programVarsWithValue.indexOf(cmd.value.name) === -1
+          ) {
+            this._errors.push(
+              `Error: Variable ${cmd.value.name} is not initialized`
+            );
+          }
+          if (cmd.value.type === 'EXPRESSION') {
+            if (
+              cmd.value.left.type === 'IDENTIFIER' &&
+              programVarsWithValue.indexOf(cmd.value.left.name) === -1
+            ) {
+              this._errors.push(
+                `Error: Variable ${cmd.value.left.name} is not initialized`
+              );
+            }
+            if (
+              cmd.value.right.type === 'IDENTIFIER' &&
+              programVarsWithValue.indexOf(cmd.value.right.name) === -1
+            ) {
+              this._errors.push(
+                `Error: Variable ${cmd.value.right.name} is not initialized`
+              );
+            }
+          }
+          break;
+        case 'READ':
+          programVarsWithValue.push(cmd.value);
+          break;
+        case 'IF':
+          this.varInitializedCheckerHelper(cmd.commands);
+          break;
+        case 'WHILE':
+          this.varInitializedCheckerHelper(cmd.commands);
+          break;
+        case 'REPEAT':
+          this.varInitializedCheckerHelper(cmd.commands);
+          break;
+      }
+    });
+
+    return programVarsWithValue;
   }
 
   // FINDERS //

@@ -16,14 +16,16 @@ export const addGen = (
 
   if (left.type === 'VALUE' && right.type === 'IDENTIFIER') {
     const variableIndex = codeGen.getVarible(right.name, procName);
+    const ADD = variableIndex.isArg ? 'ADDI' : 'ADD';
     codeGen.flatAst.push(`SET ${left.value}`);
-    codeGen.flatAst.push(`ADD ${variableIndex.index}`);
+    codeGen.flatAst.push(`${ADD} ${variableIndex.index}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
     const variableIndex = codeGen.getVarible(left.name, procName);
+    const ADD = variableIndex.isArg ? 'ADDI' : 'ADD';
     codeGen.flatAst.push(`SET ${right.value}`);
-    codeGen.flatAst.push(`ADD ${variableIndex.index}`);
+    codeGen.flatAst.push(`${ADD} ${variableIndex.index}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
@@ -51,23 +53,27 @@ export const subGen = (
 
   if (left.type === 'VALUE' && right.type === 'IDENTIFIER') {
     const variableIndex = codeGen.getVarible(right.name, procName);
+    const SUB = variableIndex.isArg ? 'SUBI' : 'SUB';
     codeGen.flatAst.push(`SET ${left.value}`);
-    codeGen.flatAst.push(`SUB ${variableIndex.index}`);
+    codeGen.flatAst.push(`${SUB} ${variableIndex.index}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
     const variableIndex = codeGen.getVarible(left.name, procName);
+    const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
     codeGen.flatAst.push(`SET ${right.value}`);
     codeGen.flatAst.push(`STORE ${codeGen.varibles['exv']}`);
-    codeGen.flatAst.push(`LOAD ${variableIndex.index}`);
+    codeGen.flatAst.push(`${LOAD} ${variableIndex.index}`);
     codeGen.flatAst.push(`SUB ${codeGen.varibles['exv']}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
     const variableIndex1 = codeGen.getVarible(left.name, procName);
     const variableIndex2 = codeGen.getVarible(right.name, procName);
-    codeGen.flatAst.push(`LOAD ${variableIndex1.index}`);
-    codeGen.flatAst.push(`SUB ${variableIndex2.index}`);
+    const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+    const SUB = variableIndex2.isArg ? 'SUBI' : 'SUB';
+    codeGen.flatAst.push(`${LOAD} ${variableIndex1.index}`);
+    codeGen.flatAst.push(`${SUB} ${variableIndex2.index}`);
   }
 };
 
@@ -316,7 +322,8 @@ export const divGen = (
     left.type === 'IDENTIFIER'
   ) {
     const variableIndex = codeGen.getVarible(left.name, procName);
-    codeGen.flatAst.push(`LOAD ${variableIndex.index}`);
+    const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+    codeGen.flatAst.push(`${LOAD} ${variableIndex.index}`);
     codeGen.flatAst.push(`HALF`);
     isHalf = true;
   } else if (
@@ -675,7 +682,8 @@ export const modGen = (
   );
   if (left.type === 'IDENTIFIER') {
     const variableIndex = codeGen.getVarible(left.name, procName);
-    codeGen.flatAst.push(`LOAD ${variableIndex.index}`);
+    const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+    codeGen.flatAst.push(`${LOAD} ${variableIndex.index}`);
   } else {
     codeGen.flatAst.push(`SET ${left.value}`);
   }

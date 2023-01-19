@@ -310,14 +310,6 @@ export class CodeGenerator {
 
   generateProc(proc: Procedure) {
     this.flatAst.push(`${proc.jumpLabel}`);
-    // console.log(proc.head.name, proc.variables);
-    // if (proc.variables) {
-    //   proc.variables.forEach((name: string) => {
-    //     this.varibles[proc.head.name + name] = this.variblesIndex.toString();
-    //     this.variblesIndex++;
-    //   });
-    // }
-
     proc.commands.forEach((command: any) => {
       this.generateCommand(command, proc.head.name);
     });

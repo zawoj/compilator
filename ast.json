@@ -1,33 +1,77 @@
 {
   "type": "GLOBALCODE",
+  "procedures": [
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "bc",
+        "variables": [
+          "n"
+        ]
+      },
+      "variables": [
+        "a"
+      ],
+      "commands": [
+        {
+          "type": "ASSIGN",
+          "identifier": "a",
+          "value": {
+            "type": "VALUE",
+            "value": "5"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "n",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "a"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "n"
+            },
+            "operator": "+"
+          }
+        },
+        {
+          "type": "WRITE",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          }
+        }
+      ],
+      "jumpLabel": "label0"
+    }
+  ],
   "program": {
     "type": "PROGRAM",
     "variables": [
       "n",
-      "m"
+      "a"
     ],
     "commands": [
       {
-        "type": "ASSIGN",
-        "identifier": "n",
-        "value": {
-          "type": "EXPRESSION",
-          "left": {
-            "type": "VALUE",
-            "value": "10"
-          },
-          "right": {
-            "type": "VALUE",
-            "value": "10"
-          },
-          "operator": "/"
-        }
+        "type": "READ",
+        "value": "a"
+      },
+      {
+        "type": "PROCCALL",
+        "name": "bc",
+        "variables": [
+          "a"
+        ]
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "n"
+          "name": "a"
         }
       }
     ]

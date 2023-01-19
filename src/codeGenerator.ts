@@ -31,42 +31,45 @@ export class CodeGenerator {
   constructor(private readonly ast: astType) {}
 
   generateCode() {
-    // Generate asm code based on the ast.program and ast.procedures
-
-    // Generate variables
+    // Set program variables registers as normal names
     this.ast.program.variables.forEach((variable) => {
       this.varibles[variable] = this.variblesIndex.toString();
       this.variblesIndex++;
     });
 
-    // Expression value holder
+    // Expression varible holder (for help with expressions)
     this.varibles['exv'] = this.variblesIndex.toString();
     this.variblesIndex++;
 
-    // Change procedures into MAP and set thiers backVariable
+    //  Set procedure variables registers as special names (procName_arg/var_name)
     if (this.ast.procedures) {
       this.ast.procedures.forEach((procedure) => {
+        // Set variables
+        procedure.variables.forEach((variable) => {
+          this.varibles[`${procedure.head.name}_var_${variable}`] =
+            this.variblesIndex.toString();
+          this.variblesIndex++;
+        });
+
+        // Set arguments
+        procedure.head.variables.forEach((arg) => {
+          this.varibles[`${procedure.head.name}_arg_${arg}`] =
+            this.variblesIndex.toString();
+          this.variblesIndex++;
+        });
+
+        // Set jump back variable
         procedure.jumpLabel = this.generateUniqueLabel();
         this.procedures.set(procedure.head.name, procedure);
-        this.varibles[procedure.head.name + 'back'] =
+        this.varibles[procedure.head.name + '_back'] =
           this.variblesIndex.toString();
         this.variblesIndex++;
       });
     }
 
-    // SET special rejestres for arguments
-    this.ast.program.commands.forEach((command) => {
-      if (command.type === 'PROCCALL') {
-        const thisProc = this.procedures.get(command.name);
-        command.variables.forEach((variable: string, index: number) => {
-          if (thisProc) {
-            this.varibles[thisProc?.head.variables[index]] =
-              this.varibles[variable];
-            this.variblesIndex++;
-          }
-        });
-      }
-    });
+    // console.log(this.varibles);
+
+    // START GENERATION //
 
     const startLabel = this.generateUniqueLabel();
     this.flatAst.push(`JUMP ${startLabel}`);
@@ -177,7 +180,7 @@ export class CodeGenerator {
     // Check if the value is a number or a variable
 
     if (command.value.type === 'VALUE') {
-      const variableIndex = this.getVaribleIndex(
+      const variableIndex = this.getVarible(
         command.identifier,
         isArg,
         procName
@@ -186,14 +189,13 @@ export class CodeGenerator {
       this.flatAst.push(`STORE ${variableIndex}`);
     } else if (command.value.type === 'IDENTIFIER') {
       // console.log(command.value.name);
-      console.log(procName);
       // console.log(isArg);
-      const variableIndex1 = this.getVaribleIndex(
+      const variableIndex1 = this.getVarible(
         command.value.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.getVaribleIndex(
+      const variableIndex2 = this.getVarible(
         command.identifier,
         isArg,
         procName
@@ -202,7 +204,7 @@ export class CodeGenerator {
       this.flatAst.push(`STORE ${variableIndex2}`);
     } else {
       this.generateExpression(command.value, isArg, procName);
-      const variableIndex = this.getVaribleIndex(
+      const variableIndex = this.getVarible(
         command.identifier,
         isArg,
         procName
@@ -214,7 +216,7 @@ export class CodeGenerator {
   generateRead(command: Read, isArg?: boolean, procName?: string) {
     // Generate asm code for READ command and get the varible from the varibles map
     // Read the value and habe to save in register
-    const variableIndex = this.getVaribleIndex(command.value, isArg, procName);
+    const variableIndex = this.getVarible(command.value, isArg, procName);
     this.flatAst.push(`GET ${variableIndex}`);
   }
 
@@ -226,7 +228,7 @@ export class CodeGenerator {
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`PUT 0`);
     } else {
-      const variableIndex = this.getVaribleIndex(
+      const variableIndex = this.getVarible(
         command.value.name,
         isArg,
         procName
@@ -280,28 +282,57 @@ export class CodeGenerator {
     }
   }
 
-  generateProcCall(procCall: ProcCall) {
+  // PROCEDURES //
+  generateProcCall(procCall: ProcCall, procName?: string) {
     const thisProc = this.procedures.get(procCall.name);
+    console.log(this.varibles);
+    // Set the arguments
+    if (procCall.variables.length > 0) {
+      // If call procedure inside procedure
+      if (procName) {
+        // console.log(procName);
+      }
+      // If call procedure inside main
+      else {
+        // console.log(procCall);
+        procCall.variables.forEach((variable: any, index: number) => {
+          // index rejestru argumentu od programu głównego, bedzie troche ciezej gdy bedzie to od innej procedury
+          this.flatAst.push(`SET ${this.varibles[variable]}`);
+
+          // index rejestru zmiennej
+          this.flatAst.push(
+            `STORE ${
+              this.varibles[
+                `${procCall.name}_arg_${thisProc?.head.variables[index]}`
+              ]
+            }`
+          );
+        });
+      }
+    }
+
+    // Set the back label and JUMPS
     const jumpLabel = this.generateUniqueLabel();
     this.flatAst.push(`SET ${jumpLabel}`);
-    this.flatAst.push(`STORE ${this.varibles[procCall.name + 'back']}`);
+    this.flatAst.push(`STORE ${this.varibles[procCall.name + '_back']}`);
     this.flatAst.push(`JUMP ${thisProc?.jumpLabel}`);
     this.flatAst.push(`${jumpLabel}`);
   }
 
   generateProc(proc: Procedure) {
     this.flatAst.push(`${proc.jumpLabel}`);
-    if (proc.variables) {
-      proc.variables.forEach((name: string) => {
-        this.varibles[proc.head.name + name] = this.variblesIndex.toString();
-        this.variblesIndex++;
-      });
-    }
+    // console.log(proc.head.name, proc.variables);
+    // if (proc.variables) {
+    //   proc.variables.forEach((name: string) => {
+    //     this.varibles[proc.head.name + name] = this.variblesIndex.toString();
+    //     this.variblesIndex++;
+    //   });
+    // }
 
     proc.commands.forEach((command: any) => {
       this.generateCommand(command, true, proc.head.name);
     });
-    this.flatAst.push(`JUMPI ${this.varibles[proc.head.name + 'back']}`);
+    this.flatAst.push(`JUMPI ${this.varibles[proc.head.name + '_back']}`);
   }
 
   // HELPER METHODS //
@@ -362,13 +393,20 @@ export class CodeGenerator {
     });
   }
 
-  getVaribleIndex(command: string, isArg?: boolean, procName?: string) {
-    const prefix = isArg ? procName : '';
-    const varible =
-      this.varibles[prefix + command] !== undefined
-        ? this.varibles[prefix + command]
-        : this.varibles[command];
-    return varible;
+  getVarible(command: string, isArg?: boolean, procName?: string) {
+    // if we are in procedure
+    if (procName) {
+    }
+
+    // const prefix = isArg ? procName : '';
+    // if (this.varibles[prefix + command] === undefined) {
+    //   // console.log(prefix + command);
+    // }
+    // const varible =
+    //   this.varibles[prefix + command] !== undefined
+    //     ? this.varibles[prefix + command]
+    //     : this.varibles[command];
+    // return varible;
   }
 
   // Generate unique varibles and return name

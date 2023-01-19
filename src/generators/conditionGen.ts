@@ -74,12 +74,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -100,7 +100,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -121,7 +121,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
@@ -162,12 +162,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -188,7 +188,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -209,7 +209,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
@@ -244,12 +244,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -264,7 +264,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -279,7 +279,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
@@ -307,12 +307,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -327,12 +327,11 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
       );
-      console.log(this.conditon.left.name);
       // console.log(variableIndex1);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
@@ -344,7 +343,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
@@ -372,12 +371,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -392,7 +391,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -407,7 +406,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
@@ -435,12 +434,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -455,7 +454,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
         isArg,
         procName
@@ -470,7 +469,7 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.right.name,
         isArg,
         procName

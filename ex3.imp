@@ -1,9 +1,16 @@
-PROGRAM IS
-VAR n,m
+PROCEDURE bc(n) IS
+VAR a
 BEGIN
-
-    n := 10/10;
-    WRITE n;
-
+   a := 5;
+   n := a + n;
+   WRITE n;
    
+END
+
+PROGRAM IS
+VAR n,a
+BEGIN
+    READ a; 
+    bc(a);
+    WRITE a; 
 END

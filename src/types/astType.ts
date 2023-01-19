@@ -97,3 +97,8 @@ export type ProcCall = {
   name: string;
   variables: string[];
 };
+
+export type getVaribleReturnType = {
+  index: string;
+  isArg: boolean;
+};

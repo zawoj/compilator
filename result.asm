@@ -1,16 +1,16 @@
 JUMP 8
 SET 5
-STORE undefined
-LOAD undefined
-ADD undefined
-STORE undefined
-PUT undefined
+STORE [object Object]
+LOAD [object Object]
+ADD [object Object]
+STORE [object Object]
+PUT [object Object]
 JUMPI 6
-GET undefined
+GET [object Object]
 SET 2
 STORE 5
 SET 14
 STORE 6
 JUMP 1
-PUT undefined
+PUT [object Object]
 HALT

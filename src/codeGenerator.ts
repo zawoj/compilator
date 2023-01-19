@@ -12,6 +12,7 @@ import {
   commands,
   Condition,
   Expression,
+  getVaribleReturnType,
   If,
   ProcCall,
   Procedure,
@@ -393,20 +394,32 @@ export class CodeGenerator {
     });
   }
 
-  getVarible(command: string, isArg?: boolean, procName?: string) {
+  getVarible(
+    varName: string,
+    isArg?: boolean,
+    procName?: string
+  ): getVaribleReturnType {
     // if we are in procedure
     if (procName) {
+      if (`${procName}_arg_${varName}` in this.varibles) {
+        return {
+          index: this.varibles[`${procName}_arg_${varName}`],
+          isArg: true,
+        };
+      }
+      // (`${procName}_var_${command}` in this.varibles)
+      else {
+        return {
+          index: this.varibles[`${procName}_var_${varName}`],
+          isArg: false,
+        };
+      }
+    } else {
+      return {
+        index: this.varibles[`${varName}`],
+        isArg: false,
+      };
     }
-
-    // const prefix = isArg ? procName : '';
-    // if (this.varibles[prefix + command] === undefined) {
-    //   // console.log(prefix + command);
-    // }
-    // const varible =
-    //   this.varibles[prefix + command] !== undefined
-    //     ? this.varibles[prefix + command]
-    //     : this.varibles[command];
-    // return varible;
   }
 
   // Generate unique varibles and return name

@@ -45,19 +45,23 @@ export class CodeGenerator {
     //  Set procedure variables registers as special names (procName_arg/var_name)
     if (this.ast.procedures) {
       this.ast.procedures.forEach((procedure) => {
-        // Set variables
-        procedure.variables.forEach((variable) => {
-          this.varibles[`${procedure.head.name}_var_${variable}`] =
-            this.variblesIndex.toString();
-          this.variblesIndex++;
-        });
+        if (procedure.variables) {
+          // Set variables
+          procedure.variables.forEach((variable) => {
+            this.varibles[`${procedure.head.name}_var_${variable}`] =
+              this.variblesIndex.toString();
+            this.variblesIndex++;
+          });
+        }
 
-        // Set arguments
-        procedure.head.variables.forEach((arg) => {
-          this.varibles[`${procedure.head.name}_arg_${arg}`] =
-            this.variblesIndex.toString();
-          this.variblesIndex++;
-        });
+        if (procedure.head.variables) {
+          // Set arguments
+          procedure.head.variables.forEach((arg) => {
+            this.varibles[`${procedure.head.name}_arg_${arg}`] =
+              this.variblesIndex.toString();
+            this.variblesIndex++;
+          });
+        }
 
         // Set jump back variable
         procedure.jumpLabel = this.generateUniqueLabel();
@@ -68,7 +72,7 @@ export class CodeGenerator {
       });
     }
 
-    // console.log(this.varibles);
+    console.log(this.varibles);
 
     // START GENERATION //
 
@@ -111,7 +115,7 @@ export class CodeGenerator {
         this.generateExpression(command, procName);
         break;
       case 'PROCCALL':
-        this.generateProcCall(command);
+        this.generateProcCall(command, procName);
       default:
         break;
     }
@@ -274,12 +278,34 @@ export class CodeGenerator {
   // PROCEDURES //
   generateProcCall(procCall: ProcCall, procName?: string) {
     const thisProc = this.procedures.get(procCall.name);
-    console.log(this.varibles);
     // Set the arguments
     if (procCall.variables.length > 0) {
       // If call procedure inside procedure
       if (procName) {
-        // console.log(procName);
+        procCall.variables.forEach((variable: any, index: number) => {
+          const propValue = this.getVarible(variable, procName);
+          if (propValue.isArg) {
+            this.flatAst.push(`LOAD ${propValue.index}`);
+            this.flatAst.push(
+              `STORE ${
+                this.varibles[
+                  `${procCall.name}_arg_${thisProc?.head.variables[index]}`
+                ]
+              }`
+            );
+          } else {
+            this.flatAst.push(`SET ${propValue.index}`);
+            this.flatAst.push(
+              `STORE ${
+                this.varibles[
+                  `${procCall.name}_arg_${thisProc?.head.variables[index]}`
+                ]
+              }`
+            );
+          }
+
+          console.log(propValue);
+        });
       }
       // If call procedure inside main
       else {
@@ -382,11 +408,14 @@ export class CodeGenerator {
           index: this.varibles[`${procName}_arg_${varName}`],
           isArg: true,
         };
-      }
-      // (`${procName}_var_${command}` in this.varibles)
-      else {
+      } else if (`${procName}_var_${varName}` in this.varibles) {
         return {
           index: this.varibles[`${procName}_var_${varName}`],
+          isArg: false,
+        };
+      } else {
+        return {
+          index: this.varibles[`${varName}`],
           isArg: false,
         };
       }

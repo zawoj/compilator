@@ -106,11 +106,11 @@ export class ConditionGenerator {
       const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -126,13 +126,13 @@ export class ConditionGenerator {
       );
       const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -194,13 +194,13 @@ export class ConditionGenerator {
       );
       const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -216,13 +216,13 @@ export class ConditionGenerator {
       );
       const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);

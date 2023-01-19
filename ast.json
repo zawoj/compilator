@@ -5,26 +5,197 @@
       "type": "PROCEDURE",
       "head": {
         "type": "PROCHEADER",
-        "name": "bc",
+        "name": "s",
         "variables": [
-          "n"
+          "n",
+          "m"
         ]
       },
       "variables": [
-        "a"
+        "i",
+        "o"
       ],
       "commands": [
         {
           "type": "ASSIGN",
-          "identifier": "a",
+          "identifier": "m",
           "value": {
             "type": "VALUE",
-            "value": "5"
+            "value": "1"
           }
         },
         {
           "type": "ASSIGN",
-          "identifier": "n",
+          "identifier": "i",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          }
+        },
+        {
+          "type": "WHILE",
+          "condition": {
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "i"
+            },
+            "type": "CONDITION",
+            "right": {
+              "type": "VALUE",
+              "value": "0"
+            },
+            "operator": ">"
+          },
+          "commands": [
+            {
+              "type": "ASSIGN",
+              "identifier": "o",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "2"
+                },
+                "operator": "%"
+              }
+            },
+            {
+              "type": "IF",
+              "condition": {
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "o"
+                },
+                "type": "CONDITION",
+                "right": {
+                  "type": "VALUE",
+                  "value": "1"
+                },
+                "operator": "="
+              },
+              "commands": [
+                {
+                  "type": "ASSIGN",
+                  "identifier": "m",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "m"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "i"
+                    },
+                    "operator": "*"
+                  }
+                }
+              ],
+              "elseCommands": [
+                {
+                  "type": "ASSIGN",
+                  "identifier": "m",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "m"
+                    },
+                    "operator": "*"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ASSIGN",
+              "identifier": "i",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "1"
+                },
+                "operator": "-"
+              }
+            }
+          ]
+        }
+      ],
+      "jumpLabel": "label0"
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "bc",
+        "variables": [
+          "n",
+          "k",
+          "m"
+        ]
+      },
+      "variables": [
+        "p",
+        "a",
+        "b",
+        "c"
+      ],
+      "commands": [
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "n",
+            "a"
+          ]
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "p",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "n"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "k"
+            },
+            "operator": "-"
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "p",
+            "b"
+          ]
+        },
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "k",
+            "c"
+          ]
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "m",
           "value": {
             "type": "EXPRESSION",
             "left": {
@@ -33,45 +204,61 @@
             },
             "right": {
               "type": "IDENTIFIER",
-              "name": "n"
+              "name": "b"
             },
-            "operator": "+"
+            "operator": "/"
           }
         },
         {
-          "type": "WRITE",
+          "type": "ASSIGN",
+          "identifier": "m",
           "value": {
-            "type": "IDENTIFIER",
-            "name": "n"
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "m"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "c"
+            },
+            "operator": "/"
           }
         }
       ],
-      "jumpLabel": "label0"
+      "jumpLabel": "label1"
     }
   ],
   "program": {
     "type": "PROGRAM",
     "variables": [
       "n",
-      "a"
+      "k",
+      "w"
     ],
     "commands": [
       {
         "type": "READ",
-        "value": "a"
+        "value": "n"
+      },
+      {
+        "type": "READ",
+        "value": "k"
       },
       {
         "type": "PROCCALL",
         "name": "bc",
         "variables": [
-          "a"
+          "n",
+          "k",
+          "w"
         ]
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "a"
+          "name": "w"
         }
       }
     ]

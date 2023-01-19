@@ -79,15 +79,15 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
@@ -163,15 +163,15 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -243,9 +243,9 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -257,7 +257,7 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -273,7 +273,7 @@ export class ConditionGenerator {
       );
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -302,9 +302,9 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -319,7 +319,7 @@ export class ConditionGenerator {
       // console.log(variableIndex1);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -331,7 +331,7 @@ export class ConditionGenerator {
         this.conditon.right.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -362,9 +362,9 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -376,7 +376,7 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -390,7 +390,7 @@ export class ConditionGenerator {
         this.conditon.right.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -421,9 +421,9 @@ export class ConditionGenerator {
         this.conditon.left.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -437,7 +437,7 @@ export class ConditionGenerator {
       );
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`LOAD ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -449,7 +449,7 @@ export class ConditionGenerator {
         this.conditon.right.name,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`LOAD ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);

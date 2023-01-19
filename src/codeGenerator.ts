@@ -182,19 +182,21 @@ export class CodeGenerator {
 
     if (command.value.type === 'VALUE') {
       const variableIndex = this.getVarible(command.identifier, procName);
+      const STORE = variableIndex.isArg ? 'STOREI' : 'STORE';
       this.flatAst.push(`SET ${command.value.value}`);
-      this.flatAst.push(`STORE ${variableIndex}`);
+      this.flatAst.push(`${STORE} ${variableIndex.index}`);
     } else if (command.value.type === 'IDENTIFIER') {
-      // console.log(command.value.name);
-      // console.log(isArg);
       const variableIndex1 = this.getVarible(command.value.name, procName);
       const variableIndex2 = this.getVarible(command.identifier, procName);
-      this.flatAst.push(`LOAD ${variableIndex1}`);
-      this.flatAst.push(`STORE ${variableIndex2}`);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const STORE = variableIndex2.isArg ? 'STOREI' : 'STORE';
+      this.flatAst.push(`${LOAD} ${variableIndex1.index}`);
+      this.flatAst.push(`${STORE} ${variableIndex2.index}`);
     } else {
       this.generateExpression(command.value, procName);
       const variableIndex = this.getVarible(command.identifier, procName);
-      this.flatAst.push(`STORE ${variableIndex}`);
+      const STORE = variableIndex.isArg ? 'STOREI' : 'STORE';
+      this.flatAst.push(`${STORE} ${variableIndex.index}`);
     }
   }
 
@@ -202,7 +204,7 @@ export class CodeGenerator {
     // Generate asm code for READ command and get the varible from the varibles map
     // Read the value and habe to save in register
     const variableIndex = this.getVarible(command.value, procName);
-    this.flatAst.push(`GET ${variableIndex}`);
+    this.flatAst.push(`GET ${variableIndex.index}`);
   }
 
   generateWrite(command: Write, procName?: string) {
@@ -214,7 +216,13 @@ export class CodeGenerator {
       this.flatAst.push(`PUT 0`);
     } else {
       const variableIndex = this.getVarible(command.value.name, procName);
-      this.flatAst.push(`PUT ${variableIndex}`);
+
+      if (variableIndex.isArg) {
+        this.flatAst.push(`LOADI ${variableIndex.index}`);
+      } else {
+        this.flatAst.push(`LOAD ${variableIndex.index}`);
+      }
+      this.flatAst.push(`PUT 0`);
     }
   }
 

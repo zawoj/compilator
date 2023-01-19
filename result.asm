@@ -1,16 +1,18 @@
-JUMP 8
+JUMP 9
 SET 5
-STORE [object Object]
-LOAD [object Object]
-ADD [object Object]
-STORE [object Object]
-PUT [object Object]
+STORE 4
+LOAD 4
+ADDI 5
+STOREI 5
+LOADI 5
+PUT 0
 JUMPI 6
-GET [object Object]
+GET 2
 SET 2
 STORE 5
-SET 14
+SET 15
 STORE 6
 JUMP 1
-PUT [object Object]
+LOAD 2
+PUT 0
 HALT

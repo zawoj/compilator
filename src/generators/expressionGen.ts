@@ -5,7 +5,6 @@ export const addGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
   right: Identifier | Value,
-  isArg?: boolean,
   procName?: string
 ) => {
   if (left.type === 'VALUE' && right.type === 'VALUE') {
@@ -16,20 +15,20 @@ export const addGen = (
   }
 
   if (left.type === 'VALUE' && right.type === 'IDENTIFIER') {
-    const variableIndex = codeGen.getVarible(right.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(right.name, procName);
     codeGen.flatAst.push(`SET ${left.value}`);
     codeGen.flatAst.push(`ADD ${variableIndex}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
-    const variableIndex = codeGen.getVarible(left.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(left.name, procName);
     codeGen.flatAst.push(`SET ${right.value}`);
     codeGen.flatAst.push(`ADD ${variableIndex}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
-    const variableIndex1 = codeGen.getVarible(left.name, isArg, procName);
-    const variableIndex2 = codeGen.getVarible(right.name, isArg, procName);
+    const variableIndex1 = codeGen.getVarible(left.name, procName);
+    const variableIndex2 = codeGen.getVarible(right.name, procName);
     codeGen.flatAst.push(`LOAD ${variableIndex1}`);
     codeGen.flatAst.push(`ADD ${variableIndex2}`);
   }
@@ -39,7 +38,6 @@ export const subGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
   right: Identifier | Value,
-  isArg?: boolean,
   procName?: string
 ) => {
   if (left.type === 'VALUE' && right.type === 'VALUE') {
@@ -50,13 +48,13 @@ export const subGen = (
   }
 
   if (left.type === 'VALUE' && right.type === 'IDENTIFIER') {
-    const variableIndex = codeGen.getVarible(right.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(right.name, procName);
     codeGen.flatAst.push(`SET ${left.value}`);
     codeGen.flatAst.push(`SUB ${variableIndex}`);
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'VALUE') {
-    const variableIndex = codeGen.getVarible(left.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(left.name, procName);
     codeGen.flatAst.push(`SET ${right.value}`);
     codeGen.flatAst.push(`STORE ${codeGen.varibles['exv']}`);
     codeGen.flatAst.push(`LOAD ${variableIndex}`);
@@ -64,8 +62,8 @@ export const subGen = (
   }
 
   if (left.type === 'IDENTIFIER' && right.type === 'IDENTIFIER') {
-    const variableIndex1 = codeGen.getVarible(left.name, isArg, procName);
-    const variableIndex2 = codeGen.getVarible(right.name, isArg, procName);
+    const variableIndex1 = codeGen.getVarible(left.name, procName);
+    const variableIndex2 = codeGen.getVarible(right.name, procName);
     codeGen.flatAst.push(`LOAD ${variableIndex1}`);
     codeGen.flatAst.push(`SUB ${variableIndex2}`);
   }
@@ -76,7 +74,7 @@ export const mulGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
   right: Identifier | Value,
-  isArg?: boolean,
+
   procName?: string
 ) => {
   // VAR x, y, z c
@@ -127,7 +125,7 @@ export const mulGen = (
         },
       ],
     },
-    isArg,
+
     procName
   );
 
@@ -141,7 +139,7 @@ export const mulGen = (
         value: '0',
       },
     },
-    isArg,
+
     procName
   );
 
@@ -294,7 +292,7 @@ export const mulGen = (
         },
       ],
     },
-    isArg,
+
     procName
   );
   // Save result in p0
@@ -305,7 +303,7 @@ export const divGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
   right: Identifier | Value,
-  isArg?: boolean,
+
   procName?: string
 ) => {
   let isHalf: boolean = false;
@@ -315,7 +313,7 @@ export const divGen = (
     right.value === '2' &&
     left.type === 'IDENTIFIER'
   ) {
-    const variableIndex = codeGen.getVarible(left.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(left.name, procName);
     codeGen.flatAst.push(`LOAD ${variableIndex}`);
     codeGen.flatAst.push(`HALF`);
     isHalf = true;
@@ -354,7 +352,7 @@ export const divGen = (
           value: '0',
         },
       },
-      isArg,
+
       procName
     );
     codeGen.generateIf(
@@ -529,7 +527,7 @@ export const divGen = (
         ],
         elseCommands: [],
       },
-      isArg,
+
       procName
     );
     codeGen.flatAst.push(`LOAD ${codeGen.varibles[rc]}`);
@@ -540,7 +538,7 @@ export const modGen = (
   codeGen: CodeGenerator,
   left: Identifier | Value,
   right: Identifier | Value,
-  isArg?: boolean,
+
   procName?: string
 ) => {
   const ra = codeGen.generateUniqueVar();
@@ -554,7 +552,7 @@ export const modGen = (
       identifier: ra,
       value: left,
     },
-    isArg,
+
     procName
   );
   codeGen.generateAssign(
@@ -566,7 +564,7 @@ export const modGen = (
         value: '0',
       },
     },
-    isArg,
+
     procName
   );
   codeGen.generateWhile(
@@ -670,11 +668,11 @@ export const modGen = (
         },
       ],
     },
-    isArg,
+
     procName
   );
   if (left.type === 'IDENTIFIER') {
-    const variableIndex = codeGen.getVarible(left.name, isArg, procName);
+    const variableIndex = codeGen.getVarible(left.name, procName);
     codeGen.flatAst.push(`LOAD ${variableIndex}`);
   } else {
     codeGen.flatAst.push(`SET ${left.value}`);

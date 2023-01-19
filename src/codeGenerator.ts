@@ -87,28 +87,28 @@ export class CodeGenerator {
     });
   }
 
-  generateCommand(command: commands, isArg?: boolean, procName?: string) {
+  generateCommand(command: commands, procName?: string) {
     switch (command.type) {
       case 'WHILE':
-        this.generateWhile(command, isArg, procName);
+        this.generateWhile(command, procName);
         break;
       case 'IF':
-        this.generateIf(command, isArg, procName);
+        this.generateIf(command, procName);
         break;
       case 'ASSIGN':
-        this.generateAssign(command, isArg, procName);
+        this.generateAssign(command, procName);
         break;
       case 'READ':
-        this.generateRead(command, isArg, procName);
+        this.generateRead(command, procName);
         break;
       case 'WRITE':
-        this.generateWrite(command, isArg, procName);
+        this.generateWrite(command, procName);
         break;
       case 'REPEAT':
-        this.generateRepeat(command, isArg, procName);
+        this.generateRepeat(command, procName);
         break;
       case 'EXPRESSION':
-        this.generateExpression(command, isArg, procName);
+        this.generateExpression(command, procName);
         break;
       case 'PROCCALL':
         this.generateProcCall(command);
@@ -117,7 +117,7 @@ export class CodeGenerator {
     }
   }
 
-  generateWhile(command: While, isArg?: boolean, procName?: string) {
+  generateWhile(command: While, procName?: string) {
     const trueLabel = this.generateUniqueLabel();
     const falseLabel = this.generateUniqueLabel();
     const returnLabel = this.generateUniqueLabel();
@@ -127,7 +127,7 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate(isArg, procName).code;
+    const conditionCode = conditions.generate(procName).code;
 
     this.flatAst.push(`${returnLabel}`);
     conditionCode.forEach((command) => {
@@ -135,13 +135,13 @@ export class CodeGenerator {
     });
     this.flatAst.push(`${trueLabel}`);
     command.commands.forEach((command: any) => {
-      this.generateCommand(command, isArg, procName);
+      this.generateCommand(command, procName);
     });
     this.flatAst.push(`JUMP ${returnLabel}`);
     this.flatAst.push(`${falseLabel}`);
   }
 
-  generateIf(command: If, isArg?: boolean, procName?: string) {
+  generateIf(command: If, procName?: string) {
     const trueLabel = this.generateUniqueLabel();
     const falseLabel = this.generateUniqueLabel();
     const label3 = this.generateUniqueLabel();
@@ -152,7 +152,7 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate(isArg, procName).code;
+    const conditionCode = conditions.generate(procName).code;
 
     conditionCode.forEach((command) => {
       this.flatAst.push(command);
@@ -160,7 +160,7 @@ export class CodeGenerator {
     // IF COMMANDS
     this.flatAst.push(`${trueLabel}`);
     command.commands.forEach((command: any) => {
-      this.generateCommand(command, isArg, procName);
+      this.generateCommand(command, procName);
     });
 
     if (command.elseCommands.length > 0) {
@@ -168,7 +168,7 @@ export class CodeGenerator {
       this.flatAst.push(`${falseLabel}`);
       // ELSE COMMENDS
       command.elseCommands.forEach((command: any) => {
-        this.generateCommand(command, isArg, procName);
+        this.generateCommand(command, procName);
       });
       this.flatAst.push(`${label3}`);
     } else {
@@ -176,52 +176,36 @@ export class CodeGenerator {
     }
   }
 
-  generateAssign(command: Assign, isArg?: boolean, procName?: string) {
+  generateAssign(command: Assign, procName?: string) {
     // Generate asm code for ASSIGN command and get the varible from the varibles map
     // Check if the value is a number or a variable
 
     if (command.value.type === 'VALUE') {
-      const variableIndex = this.getVarible(
-        command.identifier,
-        isArg,
-        procName
-      );
+      const variableIndex = this.getVarible(command.identifier, procName);
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`STORE ${variableIndex}`);
     } else if (command.value.type === 'IDENTIFIER') {
       // console.log(command.value.name);
       // console.log(isArg);
-      const variableIndex1 = this.getVarible(
-        command.value.name,
-        isArg,
-        procName
-      );
-      const variableIndex2 = this.getVarible(
-        command.identifier,
-        isArg,
-        procName
-      );
+      const variableIndex1 = this.getVarible(command.value.name, procName);
+      const variableIndex2 = this.getVarible(command.identifier, procName);
       this.flatAst.push(`LOAD ${variableIndex1}`);
       this.flatAst.push(`STORE ${variableIndex2}`);
     } else {
-      this.generateExpression(command.value, isArg, procName);
-      const variableIndex = this.getVarible(
-        command.identifier,
-        isArg,
-        procName
-      );
+      this.generateExpression(command.value, procName);
+      const variableIndex = this.getVarible(command.identifier, procName);
       this.flatAst.push(`STORE ${variableIndex}`);
     }
   }
 
-  generateRead(command: Read, isArg?: boolean, procName?: string) {
+  generateRead(command: Read, procName?: string) {
     // Generate asm code for READ command and get the varible from the varibles map
     // Read the value and habe to save in register
-    const variableIndex = this.getVarible(command.value, isArg, procName);
+    const variableIndex = this.getVarible(command.value, procName);
     this.flatAst.push(`GET ${variableIndex}`);
   }
 
-  generateWrite(command: Write, isArg?: boolean, procName?: string) {
+  generateWrite(command: Write, procName?: string) {
     // Generate asm code for WRITE command and get the varible from the varibles map
     // Write the value from register
     // Check if the value is a number or a variable
@@ -229,16 +213,12 @@ export class CodeGenerator {
       this.flatAst.push(`SET ${command.value.value}`);
       this.flatAst.push(`PUT 0`);
     } else {
-      const variableIndex = this.getVarible(
-        command.value.name,
-        isArg,
-        procName
-      );
+      const variableIndex = this.getVarible(command.value.name, procName);
       this.flatAst.push(`PUT ${variableIndex}`);
     }
   }
 
-  generateRepeat(command: Repeat, isArg?: boolean, procName?: string) {
+  generateRepeat(command: Repeat, procName?: string) {
     const trueLabel = this.generateUniqueLabel();
     const falseLabel = this.generateUniqueLabel();
     const conditions = new ConditionGenerator(
@@ -247,11 +227,11 @@ export class CodeGenerator {
       falseLabel,
       this
     );
-    const conditionCode = conditions.generate(isArg, procName).code;
+    const conditionCode = conditions.generate(procName).code;
 
     this.flatAst.push(`${falseLabel}`);
     command.commands.forEach((command: any) => {
-      this.generateCommand(command, isArg, procName);
+      this.generateCommand(command, procName);
     });
     conditionCode.forEach((command) => {
       this.flatAst.push(command);
@@ -259,24 +239,24 @@ export class CodeGenerator {
     this.flatAst.push(`${trueLabel}`);
   }
 
-  generateExpression(command: Expression, isArg?: boolean, procName?: string) {
+  generateExpression(command: Expression, procName?: string) {
     // Generate asm code for EXPRESSION command and get the varible from the varibles map
     // Check if the value is a number or a variable
     switch (command.operator) {
       case '+':
-        addGen(this, command.left, command.right, isArg, procName);
+        addGen(this, command.left, command.right, procName);
         break;
       case '-':
-        subGen(this, command.left, command.right, isArg, procName);
+        subGen(this, command.left, command.right, procName);
         break;
       case '*':
-        mulGen(this, command.left, command.right, isArg, procName);
+        mulGen(this, command.left, command.right, procName);
         break;
       case '/':
-        divGen(this, command.left, command.right, isArg, procName);
+        divGen(this, command.left, command.right, procName);
         break;
       case '%':
-        modGen(this, command.left, command.right, isArg, procName);
+        modGen(this, command.left, command.right, procName);
         break;
       default:
         break;
@@ -331,7 +311,7 @@ export class CodeGenerator {
     // }
 
     proc.commands.forEach((command: any) => {
-      this.generateCommand(command, true, proc.head.name);
+      this.generateCommand(command, proc.head.name);
     });
     this.flatAst.push(`JUMPI ${this.varibles[proc.head.name + '_back']}`);
   }
@@ -394,11 +374,7 @@ export class CodeGenerator {
     });
   }
 
-  getVarible(
-    varName: string,
-    isArg?: boolean,
-    procName?: string
-  ): getVaribleReturnType {
+  getVarible(varName: string, procName?: string): getVaribleReturnType {
     // if we are in procedure
     if (procName) {
       if (`${procName}_arg_${varName}` in this.varibles) {

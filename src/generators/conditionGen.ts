@@ -20,30 +20,27 @@ export class ConditionGenerator {
     this.conditon = conditon;
   }
 
-  generate(
-    isArg?: boolean,
-    procName?: string
-  ): {
+  generate(procName?: string): {
     code: string[];
   } {
     switch (this.conditon.operator) {
       case '=':
-        this.equal(isArg, procName);
+        this.equal(procName);
         break;
       case '!=':
-        this.notEqual(isArg, procName);
+        this.notEqual(procName);
         break;
       case '>':
-        this.greaterThan(isArg, procName);
+        this.greaterThan(procName);
         break;
       case '<':
-        this.lessThan(isArg, procName);
+        this.lessThan(procName);
         break;
       case '>=':
-        this.greaterThanOrEqual(isArg, procName);
+        this.greaterThanOrEqual(procName);
         break;
       case '<=':
-        this.lessThanOrEqual(isArg, procName);
+        this.lessThanOrEqual(procName);
         break;
       default:
         break;
@@ -53,7 +50,7 @@ export class ConditionGenerator {
       code: this.code,
     };
   }
-  equal(isArg?: boolean, procName?: string) {
+  equal(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -74,65 +71,68 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JPOS ${this.falseLabelJump}`);
-      this.code.push(`JUMP ${this.trueLabelJump}`);
-    } else if (
-      this.conditon.left.type === 'IDENTIFIER' &&
-      this.conditon.right.type === 'VALUE'
-    ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
-        this.conditon.left.name,
-        isArg,
-        procName
-      );
-      this.code.push(`SET ${this.conditon.right.value}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex}`);
-      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
-      this.code.push(`JPOS ${this.falseLabelJump}`);
-
-      this.code.push(`LOAD ${variableIndex}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
     } else if (
+      this.conditon.left.type === 'IDENTIFIER' &&
+      this.conditon.right.type === 'VALUE'
+    ) {
+      const variableIndex = this.codeGen.getVarible(
+        this.conditon.left.name,
+        procName
+      );
+      const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+
+      this.code.push(`${LOAD} ${variableIndex.index}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
+      this.code.push(`JPOS ${this.falseLabelJump}`);
+      this.code.push(`JUMP ${this.trueLabelJump}`);
+    } else if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex}`);
+      const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -141,7 +141,7 @@ export class ConditionGenerator {
     }
   }
 
-  notEqual(isArg?: boolean, procName?: string) {
+  notEqual(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -162,25 +162,25 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -188,18 +188,19 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex}`);
+      const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -209,18 +210,19 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex = this.codeGen.getVaribleIndex(
+      const variableIndex = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex}`);
+      const LOAD = variableIndex.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`LOAD ${variableIndex}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -229,7 +231,7 @@ export class ConditionGenerator {
     }
   }
 
-  lessThan(isArg?: boolean, procName?: string) {
+  lessThan(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -244,19 +246,21 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -264,12 +268,12 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -279,20 +283,21 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  greaterThan(isArg?: boolean, procName?: string) {
+  greaterThan(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -307,19 +312,19 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -327,16 +332,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      console.log(this.conditon.left.name);
-      // console.log(variableIndex1);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -344,12 +348,13 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -357,7 +362,7 @@ export class ConditionGenerator {
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  greaterThanOrEqual(isArg?: boolean, procName?: string) {
+  greaterThanOrEqual(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -372,19 +377,19 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -392,12 +397,13 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -407,12 +413,13 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
@@ -420,7 +427,7 @@ export class ConditionGenerator {
       this.code.push(`JUMP ${this.falseLabelJump}`);
     }
   }
-  lessThanOrEqual(isArg?: boolean, procName?: string) {
+  lessThanOrEqual(procName?: string) {
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -435,19 +442,19 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex1}`);
+      const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+      const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex2}`);
+      this.code.push(`${LOAD2} ${variableIndex2.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -455,14 +462,15 @@ export class ConditionGenerator {
       this.conditon.left.type === 'IDENTIFIER' &&
       this.conditon.right.type === 'VALUE'
     ) {
-      const variableIndex1 = this.codeGen.getVaribleIndex(
+      const variableIndex1 = this.codeGen.getVarible(
         this.conditon.left.name,
-        isArg,
         procName
       );
+      const LOAD = variableIndex1.isArg ? 'LOADI' : 'LOAD';
+
       this.code.push(`SET ${this.conditon.right.value}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
-      this.code.push(`LOAD ${variableIndex1}`);
+      this.code.push(`${LOAD} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JZERO ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -470,12 +478,13 @@ export class ConditionGenerator {
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'IDENTIFIER'
     ) {
-      const variableIndex2 = this.codeGen.getVaribleIndex(
+      const variableIndex2 = this.codeGen.getVarible(
         this.conditon.right.name,
-        isArg,
         procName
       );
-      this.code.push(`LOAD ${variableIndex2}`);
+      const LOAD = variableIndex2.isArg ? 'LOADI' : 'LOAD';
+
+      this.code.push(`${LOAD} ${variableIndex2.index}`);
       this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);

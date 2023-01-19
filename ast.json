@@ -1,33 +1,264 @@
 {
   "type": "GLOBALCODE",
+  "procedures": [
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "s",
+        "variables": [
+          "n",
+          "m"
+        ]
+      },
+      "variables": [
+        "i",
+        "o"
+      ],
+      "commands": [
+        {
+          "type": "ASSIGN",
+          "identifier": "m",
+          "value": {
+            "type": "VALUE",
+            "value": "1"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "i",
+          "value": {
+            "type": "IDENTIFIER",
+            "name": "n"
+          }
+        },
+        {
+          "type": "WHILE",
+          "condition": {
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "i"
+            },
+            "type": "CONDITION",
+            "right": {
+              "type": "VALUE",
+              "value": "0"
+            },
+            "operator": ">"
+          },
+          "commands": [
+            {
+              "type": "ASSIGN",
+              "identifier": "o",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "2"
+                },
+                "operator": "%"
+              }
+            },
+            {
+              "type": "IF",
+              "condition": {
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "o"
+                },
+                "type": "CONDITION",
+                "right": {
+                  "type": "VALUE",
+                  "value": "1"
+                },
+                "operator": "="
+              },
+              "commands": [
+                {
+                  "type": "ASSIGN",
+                  "identifier": "m",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "m"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "i"
+                    },
+                    "operator": "*"
+                  }
+                }
+              ],
+              "elseCommands": [
+                {
+                  "type": "ASSIGN",
+                  "identifier": "m",
+                  "value": {
+                    "type": "EXPRESSION",
+                    "left": {
+                      "type": "IDENTIFIER",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "IDENTIFIER",
+                      "name": "m"
+                    },
+                    "operator": "*"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "ASSIGN",
+              "identifier": "i",
+              "value": {
+                "type": "EXPRESSION",
+                "left": {
+                  "type": "IDENTIFIER",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "VALUE",
+                  "value": "1"
+                },
+                "operator": "-"
+              }
+            }
+          ]
+        }
+      ],
+      "jumpLabel": "label0"
+    },
+    {
+      "type": "PROCEDURE",
+      "head": {
+        "type": "PROCHEADER",
+        "name": "bc",
+        "variables": [
+          "n",
+          "k",
+          "m"
+        ]
+      },
+      "variables": [
+        "p",
+        "a",
+        "b",
+        "c"
+      ],
+      "commands": [
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "n",
+            "a"
+          ]
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "p",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "n"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "k"
+            },
+            "operator": "-"
+          }
+        },
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "p",
+            "b"
+          ]
+        },
+        {
+          "type": "PROCCALL",
+          "name": "s",
+          "variables": [
+            "k",
+            "c"
+          ]
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "m",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "a"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "b"
+            },
+            "operator": "/"
+          }
+        },
+        {
+          "type": "ASSIGN",
+          "identifier": "m",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "m"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "c"
+            },
+            "operator": "/"
+          }
+        }
+      ],
+      "jumpLabel": "label1"
+    }
+  ],
   "program": {
     "type": "PROGRAM",
     "variables": [
       "n",
-      "m"
+      "k",
+      "w"
     ],
     "commands": [
       {
-        "type": "ASSIGN",
-        "identifier": "n",
-        "value": {
-          "type": "EXPRESSION",
-          "left": {
-            "type": "VALUE",
-            "value": "10"
-          },
-          "right": {
-            "type": "VALUE",
-            "value": "10"
-          },
-          "operator": "/"
-        }
+        "type": "READ",
+        "value": "n"
+      },
+      {
+        "type": "READ",
+        "value": "k"
+      },
+      {
+        "type": "PROCCALL",
+        "name": "bc",
+        "variables": [
+          "n",
+          "k",
+          "w"
+        ]
       },
       {
         "type": "WRITE",
         "value": {
           "type": "IDENTIFIER",
-          "name": "n"
+          "name": "w"
         }
       }
     ]

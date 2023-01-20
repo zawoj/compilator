@@ -11,7 +11,6 @@ export default class AstValidation {
   }
 
   runValidation() {
-    // console.log(this.rawAst);
     this.nameConflictCheck();
     this.checkUseNotDeclared();
     this.checkIfVarWasInitialized();
@@ -114,9 +113,6 @@ export default class AstValidation {
 
   checkIfVarWasInitialized() {
     this.varInitializedCheckerHelper(this.ast.program.commands);
-    // this.ast.procedures.forEach((proc) => {
-    //   this.varInitializedCheckerHelper(proc.commands);
-    // });
   }
 
   varInitializedCheckerHelper(
@@ -127,7 +123,6 @@ export default class AstValidation {
     let varsWithValue: string[] = [...currentValuesVars];
     // Just assing and read commands can initialize a variable
     cmd.forEach((cmd) => {
-      console.log(cmd.type);
       switch (cmd.type) {
         case 'ASSIGN':
           varsWithValue.push(cmd.identifier);
@@ -271,7 +266,6 @@ export default class AstValidation {
             identifiers.push(cmd.value);
           }
         } else if (cmd.type === 'EXPRESSION') {
-          console.log(cmd);
           if (cmd.left.type === 'IDENTIFIER') {
             identifiers.push(cmd.left);
           }
@@ -311,6 +305,6 @@ export default class AstValidation {
   // PRINTERS //
   printErrors() {
     this._errors.forEach((error) => console.error(error));
-    // process.exit(1);
+    process.exit(1);
   }
 }

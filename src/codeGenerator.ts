@@ -72,8 +72,6 @@ export class CodeGenerator {
       });
     }
 
-    console.log(this.varibles);
-
     // START GENERATION //
 
     const startLabel = this.generateUniqueLabel();
@@ -303,13 +301,10 @@ export class CodeGenerator {
               }`
             );
           }
-
-          console.log(propValue);
         });
       }
       // If call procedure inside main
       else {
-        // console.log(procCall);
         procCall.variables.forEach((variable: any, index: number) => {
           // index rejestru argumentu od programu głównego, bedzie troche ciezej gdy bedzie to od innej procedury
           this.flatAst.push(`SET ${this.varibles[variable]}`);

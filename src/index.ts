@@ -28,7 +28,7 @@ const parser = new Parser(bnf);
 const source = fs.readFileSync('ex3.imp', 'utf8');
 const ast = parser.parse(source);
 
-const astValidation = new AstValidation(ast);
+const astValidation = new AstValidation(ast, source);
 
 astValidation.runValidation();
 

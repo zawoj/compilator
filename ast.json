@@ -26,6 +26,22 @@
         },
         {
           "type": "ASSIGN",
+          "identifier": "d",
+          "value": {
+            "type": "EXPRESSION",
+            "left": {
+              "type": "IDENTIFIER",
+              "name": "b"
+            },
+            "right": {
+              "type": "IDENTIFIER",
+              "name": "c"
+            },
+            "operator": "+"
+          }
+        },
+        {
+          "type": "ASSIGN",
           "identifier": "a",
           "value": {
             "type": "EXPRESSION",
@@ -67,6 +83,13 @@
         "value": {
           "type": "IDENTIFIER",
           "name": "b"
+        }
+      },
+      {
+        "type": "WRITE",
+        "value": {
+          "type": "IDENTIFIER",
+          "name": "d"
         }
       }
     ]

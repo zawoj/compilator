@@ -3,12 +3,15 @@ import { astType, commands, Identifier, ProcCall } from './types/astType';
 export default class AstValidation {
   private _errors: string[];
   ast: astType;
-  constructor(ast: astType) {
+  rawAst: any;
+  constructor(ast: astType, source: string) {
     this._errors = [];
     this.ast = ast;
+    this.rawAst = source;
   }
 
   runValidation() {
+    // console.log(this.rawAst);
     this.nameConflictCheck();
     this.checkUseNotDeclared();
     this.checkIfVarWasInitialized();
@@ -110,51 +113,87 @@ export default class AstValidation {
   }
 
   checkIfVarWasInitialized() {
-    const programWrasWithValue = this.varInitializedCheckerHelper(
-      this.ast.program.commands
-    );
-    this.ast.procedures.forEach((proc) => {
-      this.varInitializedCheckerHelper(proc.commands);
-    });
+    this.varInitializedCheckerHelper(this.ast.program.commands);
+    // this.ast.procedures.forEach((proc) => {
+    //   this.varInitializedCheckerHelper(proc.commands);
+    // });
   }
 
-  varInitializedCheckerHelper(cmd: commands[]) {
-    let programVarsWithValue: string[] = [];
+  varInitializedCheckerHelper(
+    cmd: commands[],
+    currentValuesVars: string[] = [],
+    procName?: string
+  ) {
+    let varsWithValue: string[] = [...currentValuesVars];
     // Just assing and read commands can initialize a variable
     cmd.forEach((cmd) => {
       console.log(cmd.type);
       switch (cmd.type) {
         case 'ASSIGN':
-          programVarsWithValue.push(cmd.identifier);
+          varsWithValue.push(cmd.identifier);
           if (
             cmd.value.type === 'IDENTIFIER' &&
-            programVarsWithValue.indexOf(cmd.value.name) === -1
+            varsWithValue.indexOf(cmd.value.name) === -1
           ) {
-            this._errors.push(
-              `Error: Variable ${cmd.value.name} is not initialized`
-            );
+            if (procName) {
+              this._errors.push(
+                `Error: Variable ${cmd.value.name} is not initialized in procedure ${procName}`
+              );
+            } else {
+              this._errors.push(
+                `Error: Variable ${cmd.value.name} is not initialized`
+              );
+            }
           }
           if (cmd.value.type === 'EXPRESSION') {
             if (
               cmd.value.left.type === 'IDENTIFIER' &&
-              programVarsWithValue.indexOf(cmd.value.left.name) === -1
+              varsWithValue.indexOf(cmd.value.left.name) === -1
             ) {
-              this._errors.push(
-                `Error: Variable ${cmd.value.left.name} is not initialized`
-              );
+              if (procName) {
+                this._errors.push(
+                  `Error: Variable ${cmd.value.left.name} is not initialized in procedure ${procName}`
+                );
+              } else {
+                this._errors.push(
+                  `Error: Variable ${cmd.value.left.name} is not initialized`
+                );
+              }
             }
             if (
               cmd.value.right.type === 'IDENTIFIER' &&
-              programVarsWithValue.indexOf(cmd.value.right.name) === -1
+              varsWithValue.indexOf(cmd.value.right.name) === -1
             ) {
+              if (procName) {
+                this._errors.push(
+                  `Error: Variable ${cmd.value.right.name} is not initialized in procedure ${procName}`
+                );
+              } else {
+                this._errors.push(
+                  `Error: Variable ${cmd.value.right.name} is not initialized`
+                );
+              }
+            }
+          }
+          break;
+        case 'WRITE':
+          if (
+            cmd.value.type === 'IDENTIFIER' &&
+            varsWithValue.indexOf(cmd.value.name) === -1
+          ) {
+            if (procName) {
               this._errors.push(
-                `Error: Variable ${cmd.value.right.name} is not initialized`
+                `Error: Variable ${cmd.value.name} is not initialized in procedure ${procName}`
+              );
+            } else {
+              this._errors.push(
+                `Error: Variable ${cmd.value.name} is not initialized`
               );
             }
           }
           break;
         case 'READ':
-          programVarsWithValue.push(cmd.value);
+          varsWithValue.push(cmd.value);
           break;
         case 'IF':
           this.varInitializedCheckerHelper(cmd.commands);
@@ -165,10 +204,31 @@ export default class AstValidation {
         case 'REPEAT':
           this.varInitializedCheckerHelper(cmd.commands);
           break;
+        case 'PROCCALL':
+          const proc = this.ast.procedures.find(
+            (proc) => proc.head.name === cmd.name
+          );
+          if (proc) {
+            cmd.variables.forEach((varName) => {
+              varsWithValue.push(varName);
+            });
+
+            proc.head.variables.forEach((varName) => {
+              varsWithValue.push(varName);
+            });
+
+            this.varInitializedCheckerHelper(
+              proc?.commands,
+              varsWithValue,
+              cmd.name
+            );
+          }
+
+          break;
       }
     });
 
-    return programVarsWithValue;
+    return varsWithValue;
   }
 
   // FINDERS //

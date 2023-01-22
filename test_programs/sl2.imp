@@ -14,16 +14,12 @@ BEGIN
     d := 4294967300;
 
     n := a * b;
-    WRITE n;
     n := n * c;
-    WRITE n;
     n := n * d;
     WRITE n;
 
     n := a * d;
-    WRITE n;
     m := b * c;
-    WRITE n;
     n := n * m;
     WRITE n;
 

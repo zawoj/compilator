@@ -66,7 +66,10 @@
 
 
 /* First part of user prologue.  */
-#line 16 "parser.y"
+#line 13 "parser.y"
+
+
+#define YYSTYPE long long
 
 #include <iostream>
 #include <utility>
@@ -83,7 +86,7 @@ void yyset_in( FILE * in_str );
 void yyerror( vector< pair<int,long long> > & program, char const *s );
 
 
-#line 87 "parser.cc"
+#line 90 "parser.cc"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -130,9 +133,6 @@ extern int yydebug;
  
 #include<vector> 
 #include<utility>
-
-#define YYSTYPE long long
-
 using namespace std;
 
 #line 139 "parser.cc"

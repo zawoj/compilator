@@ -31,7 +31,7 @@ codeGenerator.generateCode();
 codeGenerator.endProgram();
 codeGenerator.astLabelCleaner();
 fs.writeFileSync(
-  args[1] !== undefined && args[1] !== '-force' ? args[1] : 'out.asm',
+  args[1] !== undefined ? args[1] : 'out.asm',
   codeGenerator.getFlatAst().join('\r\n')
 );
 

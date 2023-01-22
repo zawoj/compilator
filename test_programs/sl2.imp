@@ -1,0 +1,30 @@
+[ Wymnozenie liczby 340282367713220089251654026161790386200 
+  ze stalych 33-bitowych
+  ( (2^32+1) * (2^32+2) * (2^32+3) * (2^32+4) )
+  na 2 sposoby.
+]
+PROGRAM IS
+VAR
+    a, b, c, d,
+    n, m
+BEGIN
+    a := 4294967297;
+    b := 4294967298;
+    c := 4294967299;
+    d := 4294967300;
+
+    n := a * b;
+    WRITE n;
+    n := n * c;
+    WRITE n;
+    n := n * d;
+    WRITE n;
+
+    n := a * d;
+    WRITE n;
+    m := b * c;
+    WRITE n;
+    n := n * m;
+    WRITE n;
+
+END

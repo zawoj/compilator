@@ -29,7 +29,8 @@ export default class AstValidation {
     }
 
     // Check main procedure statements for name conflicts
-    this.ast.procedures.forEach((proc) => {
+    if(this.ast.procedures){
+this.ast.procedures.forEach((proc) => {
       let error = false;
       // Check procedure arguments for name conflicts
       const duplicateArgs = this.tofindDuplicates(proc.head.variables);
@@ -57,6 +58,8 @@ export default class AstValidation {
         );
       }
     });
+    }
+    
   }
 
   checkUseNotDeclared() {
@@ -69,7 +72,8 @@ export default class AstValidation {
         );
       }
     });
-    this.ast.procedures.forEach((proc) => {
+    if(this.ast.procedures){
+this.ast.procedures.forEach((proc) => {
       const procIdentifiers = this.findIdentifiers(proc.commands);
       const varsAndArgs = proc.head.variables.concat(proc.variables);
       procIdentifiers.forEach((identifier) => {
@@ -80,6 +84,8 @@ export default class AstValidation {
         }
       });
     });
+    }
+    
   }
 
   checkIfDeclared(cmd: Identifier) {
@@ -90,25 +96,31 @@ export default class AstValidation {
     }
 
     // Check if variable is declared in procedure
-    this.ast.procedures.forEach((proc) => {
+    if(this.ast.procedures){
+this.ast.procedures.forEach((proc) => {
       const procVariables = proc.variables;
       if (procVariables.includes(cmd.name)) {
         return true;
       }
     });
 
+    }
+    
     return false;
   }
 
   checkIfProcedureIsDefined() {
     // Check if procedure is defined
     const procCalls = this.findProcCalls(this.ast.program.commands);
+    if(this.ast.procedures){
     const procNames = this.ast.procedures.map((proc) => proc.head.name);
-    procCalls.forEach((procCall) => {
-      if (!procNames.includes(procCall.name)) {
-        this._errors.push(`Error: Procedure ${procCall.name} is not defined`);
-      }
-    });
+        procCalls.forEach((procCall) => {
+          if (!procNames.includes(procCall.name)) {
+            this._errors.push(`Error: Procedure ${procCall.name} is not defined`);
+          }
+        });
+    }
+   
   }
 
   checkIfVarWasInitialized() {

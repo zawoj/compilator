@@ -1,3 +1,4 @@
+import { ChildProcess } from 'child_process';
 import AstValidation from './astValidation';
 import { CodeGenerator } from './codeGenerator';
 const Parser = require('jison').Parser;
@@ -21,7 +22,9 @@ const parser = new Parser(bnf);
 const source = fs.readFileSync(args[0], 'utf8');
 const ast = parser.parse(source);
 
-if (args[2] !== '-force' && args[1] !== '-force') {
+const findForceFlag = args.find((arg) => arg === '-force');
+
+if (!findForceFlag) {
   const astValidation = new AstValidation(ast, source);
   astValidation.runValidation();
 }
@@ -30,9 +33,20 @@ const codeGenerator = new CodeGenerator(ast);
 codeGenerator.generateCode();
 codeGenerator.endProgram();
 codeGenerator.astLabelCleaner();
-fs.writeFileSync(
-  args[1] !== undefined ? args[1] : 'out.asm',
-  codeGenerator.getFlatAst().join('\r\n')
-);
+
+if (!findForceFlag) {
+  fs.writeFileSync(
+    args[1] !== undefined ? args[1] : 'out.asm',
+    codeGenerator.getFlatAst().join('\r\n')
+  );
+} else if (findForceFlag) {
+  const findOutPutFile = args.find(
+    (arg, index) => arg !== '-force' && index > 0
+  );
+  fs.writeFileSync(
+    findOutPutFile !== undefined ? findOutPutFile : 'out.asm',
+    codeGenerator.getFlatAst().join('\r\n')
+  );
+}
 
 module.exports = parser;

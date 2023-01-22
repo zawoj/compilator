@@ -25,3 +25,11 @@
 - plik_wejsciowy - plik wejściowy z danymi np: `input.imp`
 - plik_wyjsciowy - plik wyjściowy z danymi np: `output.asm` (opcjonalnie, jak nie podany to zapisać do pliku `output.asm`)
 - opcje - opcjonalne parametry np: `-force` (nie przeprowadza sprawdzenia poprawności danych wejściowych)
+
+### Przykładowe użycie
+
+Wywołanie na wysokości katalogu projektu (pliku package.json)
+
+```bash
+  node build/index.js input.imp output.asm -force
+```

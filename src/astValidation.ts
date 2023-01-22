@@ -315,6 +315,8 @@ export default class AstValidation {
   // PRINTERS //
   printErrors() {
     this._errors.forEach((error) => console.error(error));
-    process.exit(1);
+    if (this._errors.length > 0) {
+      process.exit(1);
+    }
   }
 }

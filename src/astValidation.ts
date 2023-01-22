@@ -29,37 +29,36 @@ export default class AstValidation {
     }
 
     // Check main procedure statements for name conflicts
-    if(this.ast.procedures){
-this.ast.procedures.forEach((proc) => {
-      let error = false;
-      // Check procedure arguments for name conflicts
-      const duplicateArgs = this.tofindDuplicates(proc.head.variables);
-      if (duplicateArgs.length > 0) {
-        this._errors.push(
-          `Error: Duplicate argument name conflict in procedure ${proc.head.name}: ${duplicateArgs}`
-        );
-        error = true;
-      }
+    if (this.ast.procedures) {
+      this.ast.procedures.forEach((proc) => {
+        let error = false;
+        // Check procedure arguments for name conflicts
+        const duplicateArgs = this.tofindDuplicates(proc.head.variables);
+        if (duplicateArgs.length > 0) {
+          this._errors.push(
+            `Error: Duplicate argument name conflict in procedure ${proc.head.name}: ${duplicateArgs}`
+          );
+          error = true;
+        }
 
-      // Check procedure variables for name conflicts
-      const duplicateVars = this.tofindDuplicates(proc.variables);
-      if (duplicateVars.length > 0) {
-        this._errors.push(
-          `Error: Duplicate variable name conflict in procedure ${proc.head.name}: ${duplicateVars}`
-        );
-        error = true;
-      }
+        // Check procedure variables for name conflicts
+        const duplicateVars = this.tofindDuplicates(proc.variables);
+        if (duplicateVars.length > 0) {
+          this._errors.push(
+            `Error: Duplicate variable name conflict in procedure ${proc.head.name}: ${duplicateVars}`
+          );
+          error = true;
+        }
 
-      const varAndArgs = proc.head.variables.concat(proc.variables);
-      const duplicateVarAndArgs = this.tofindDuplicates(varAndArgs);
-      if (duplicateVarAndArgs.length > 0 && !error) {
-        this._errors.push(
-          `Error: Duplicate variable and argument name conflict in procedure ${proc.head.name}: ${duplicateVarAndArgs}`
-        );
-      }
-    });
+        const varAndArgs = proc.head.variables.concat(proc.variables);
+        const duplicateVarAndArgs = this.tofindDuplicates(varAndArgs);
+        if (duplicateVarAndArgs.length > 0 && !error) {
+          this._errors.push(
+            `Error: Duplicate variable and argument name conflict in procedure ${proc.head.name}: ${duplicateVarAndArgs}`
+          );
+        }
+      });
     }
-    
   }
 
   checkUseNotDeclared() {
@@ -72,20 +71,19 @@ this.ast.procedures.forEach((proc) => {
         );
       }
     });
-    if(this.ast.procedures){
-this.ast.procedures.forEach((proc) => {
-      const procIdentifiers = this.findIdentifiers(proc.commands);
-      const varsAndArgs = proc.head.variables.concat(proc.variables);
-      procIdentifiers.forEach((identifier) => {
-        if (!varsAndArgs.includes(identifier.name)) {
-          this._errors.push(
-            `Error: Variable ${identifier.name} is not declared in procedure ${proc.head.name}`
-          );
-        }
+    if (this.ast.procedures) {
+      this.ast.procedures.forEach((proc) => {
+        const procIdentifiers = this.findIdentifiers(proc.commands);
+        const varsAndArgs = proc.head.variables.concat(proc.variables);
+        procIdentifiers.forEach((identifier) => {
+          if (!varsAndArgs.includes(identifier.name)) {
+            this._errors.push(
+              `Error: Variable ${identifier.name} is not declared in procedure ${proc.head.name}`
+            );
+          }
+        });
       });
-    });
     }
-    
   }
 
   checkIfDeclared(cmd: Identifier) {
@@ -96,31 +94,29 @@ this.ast.procedures.forEach((proc) => {
     }
 
     // Check if variable is declared in procedure
-    if(this.ast.procedures){
-this.ast.procedures.forEach((proc) => {
-      const procVariables = proc.variables;
-      if (procVariables.includes(cmd.name)) {
-        return true;
-      }
-    });
-
+    if (this.ast.procedures) {
+      this.ast.procedures.forEach((proc) => {
+        const procVariables = proc.variables;
+        if (procVariables.includes(cmd.name)) {
+          return true;
+        }
+      });
     }
-    
+
     return false;
   }
 
   checkIfProcedureIsDefined() {
     // Check if procedure is defined
     const procCalls = this.findProcCalls(this.ast.program.commands);
-    if(this.ast.procedures){
-    const procNames = this.ast.procedures.map((proc) => proc.head.name);
-        procCalls.forEach((procCall) => {
-          if (!procNames.includes(procCall.name)) {
-            this._errors.push(`Error: Procedure ${procCall.name} is not defined`);
-          }
-        });
+    if (this.ast.procedures) {
+      const procNames = this.ast.procedures.map((proc) => proc.head.name);
+      procCalls.forEach((procCall) => {
+        if (!procNames.includes(procCall.name)) {
+          this._errors.push(`Error: Procedure ${procCall.name} is not defined`);
+        }
+      });
     }
-   
   }
 
   checkIfVarWasInitialized() {
@@ -133,6 +129,7 @@ this.ast.procedures.forEach((proc) => {
     procName?: string
   ) {
     let varsWithValue: string[] = [...currentValuesVars];
+
     // Just assing and read commands can initialize a variable
     cmd.forEach((cmd) => {
       switch (cmd.type) {
@@ -203,13 +200,13 @@ this.ast.procedures.forEach((proc) => {
           varsWithValue.push(cmd.value);
           break;
         case 'IF':
-          this.varInitializedCheckerHelper(cmd.commands);
+          this.varInitializedCheckerHelper(cmd.commands, varsWithValue);
           break;
         case 'WHILE':
-          this.varInitializedCheckerHelper(cmd.commands);
+          this.varInitializedCheckerHelper(cmd.commands, varsWithValue);
           break;
         case 'REPEAT':
-          this.varInitializedCheckerHelper(cmd.commands);
+          this.varInitializedCheckerHelper(cmd.commands, varsWithValue);
           break;
         case 'PROCCALL':
           const proc = this.ast.procedures.find(
@@ -220,10 +217,11 @@ this.ast.procedures.forEach((proc) => {
               varsWithValue.push(varName);
             });
 
-            proc.head.variables.forEach((varName) => {
+            proc.variables.forEach((varName) => {
               varsWithValue.push(varName);
             });
 
+            // console.log(varsWithValue);
             this.varInitializedCheckerHelper(
               proc?.commands,
               varsWithValue,

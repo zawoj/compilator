@@ -1,8 +1,9 @@
 ### Przygotowanie środowiska
 
-1. Instalacja Node.js
+1. Instalacja Node v16.16.0 (LTS)
 
-- [Node.js](https://nodejs.org/en/) - środowisko uruchomieniowe dla JavaScript
+- [Node.js](https://nodejs.org/en/blog/release/v16.16.0/) - środowisko uruchomieniowe dla JavaScript
+- [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md#deb) - Node.js Binary Distributions
 
 2. Instalacja zależności
 
@@ -19,7 +20,7 @@
 4. Uruchomienie projektu
 
 ```bash
-  node build/index.js [plik_wejsciowy] [plik_wyjsciowy] [opcje]
+  node src/index.js [plik_wejsciowy] [plik_wyjsciowy] [opcje]
 ```
 
 - plik_wejsciowy - plik wejściowy z danymi np: `input.imp`
@@ -31,5 +32,5 @@
 Wywołanie na wysokości katalogu projektu (pliku package.json)
 
 ```bash
-  node build/index.js input.imp output.asm -force
+ E:\> node .\compilator\src\index.js .\compilator\helper\test2a.imp .\compilator\out.asm
 ```

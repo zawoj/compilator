@@ -11,7 +11,7 @@ VAR x,y
 BEGIN
   x:=a;
   y:=b;
-  WHILE y!=0 DO
+  WHILE 0!=y DO
     IF x>=y THEN 
       x:=x-y;
     ELSE 

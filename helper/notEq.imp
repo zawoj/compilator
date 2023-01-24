@@ -1,0 +1,18 @@
+PROGRAM IS
+VAR a,b
+BEGIN
+  READ a;
+  READ b;
+   IF a = b THEN 
+      WRITE 1; 
+    ENDIF
+   IF a = 5 THEN 
+      WRITE 2; 
+    ENDIF
+   IF 5 = a THEN 
+      WRITE 3; 
+    ENDIF
+  IF 6 = 6 THEN 
+      WRITE 4; 
+    ENDIF
+END

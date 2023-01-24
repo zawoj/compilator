@@ -132,9 +132,9 @@ export class ConditionGenerator {
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex.index}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.falseLabelJump}`);
       this.code.push(`JUMP ${this.trueLabelJump}`);
@@ -142,6 +142,8 @@ export class ConditionGenerator {
   }
 
   notEqual(procName?: string) {
+    console.log(this.conditon.left)
+    console.log(this.conditon.right)
     if (
       this.conditon.left.type === 'VALUE' &&
       this.conditon.right.type === 'VALUE'
@@ -172,9 +174,9 @@ export class ConditionGenerator {
       );
       const LOAD1 = variableIndex1.isArg ? 'LOADI' : 'LOAD';
       const LOAD2 = variableIndex2.isArg ? 'LOADI' : 'LOAD';
-      this.code.push(`${LOAD1} ${variableIndex1.index}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`${LOAD2} ${variableIndex2.index}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`${LOAD1} ${variableIndex1.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
@@ -200,9 +202,9 @@ export class ConditionGenerator {
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex.index}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.right.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);
@@ -222,9 +224,9 @@ export class ConditionGenerator {
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
 
-      this.code.push(`${LOAD} ${variableIndex.index}`);
-      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
       this.code.push(`SET ${this.conditon.left.value}`);
+      this.code.push(`STORE ${this.codeGen.varibles['exv']}`);
+      this.code.push(`${LOAD} ${variableIndex.index}`);
       this.code.push(`SUB ${this.codeGen.varibles['exv']}`);
       this.code.push(`JPOS ${this.trueLabelJump}`);
       this.code.push(`JUMP ${this.falseLabelJump}`);

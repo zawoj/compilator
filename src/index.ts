@@ -4,6 +4,7 @@ import { CodeGenerator } from './codeGenerator';
 const Parser = require('jison').Parser;
 const jison = require('jison');
 const fs = require('fs');
+import path from 'path';
 
 const args = process.argv.slice(2);
 
@@ -12,10 +13,10 @@ if (args.length === 0) {
   console.log('node index.js <input> [output] [-force]');
   process.exit(1);
 }
-
 jison.print = function () {};
 
-const bnf = fs.readFileSync('grammar.jison', 'utf8');
+// get relative path to grammar file which is in src folder
+const bnf = fs.readFileSync(path.resolve(__dirname, 'grammar.jison'), 'utf8');
 const parser = new Parser(bnf);
 
 // Pare file ex3.imp and print the AST

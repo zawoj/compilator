@@ -213,13 +213,20 @@ export default class AstValidation {
             (proc) => proc.head.name === cmd.name
           );
           if (proc) {
-            cmd.variables.forEach((varName) => {
-              varsWithValue.push(varName);
-            });
+            if (cmd.variables)
+              cmd.variables.forEach((varName) => {
+                varsWithValue.push(varName);
+              });
 
-            proc.variables.forEach((varName) => {
-              varsWithValue.push(varName);
-            });
+            if (proc.variables)
+              proc.variables.forEach((varName) => {
+                varsWithValue.push(varName);
+              });
+
+            if (proc.head.variables)
+              proc.head.variables.forEach((varName) => {
+                varsWithValue.push(varName);
+              });
 
             // console.log(varsWithValue);
             this.varInitializedCheckerHelper(
@@ -309,14 +316,12 @@ export default class AstValidation {
   }
 
   tofindDuplicates(arr: string[]) {
-    return arr.filter((item, index) => arr.indexOf(item) !== index);
+    if (arr) return arr.filter((item, index) => arr.indexOf(item) !== index);
+    else return [];
   }
 
   // PRINTERS //
   printErrors() {
     this._errors.forEach((error) => console.error(error));
-    if (this._errors.length > 0) {
-      process.exit(1);
-    }
   }
 }
